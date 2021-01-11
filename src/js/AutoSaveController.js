@@ -52,6 +52,7 @@ mindmaps.AutoSaveController = function(eventBus, mindmapModel) {
     eventBus.subscribe(mindmaps.Event.DOCUMENT_OPENED, this.documentOpened
         .bind(this));
 
+
     eventBus.subscribe(mindmaps.Event.DOCUMENT_CLOSED, this.documentClosed
         .bind(this));
   }

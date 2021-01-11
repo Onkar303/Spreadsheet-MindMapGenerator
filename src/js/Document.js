@@ -43,10 +43,8 @@ mindmaps.Document.fromObject = function(obj) {
     created : new Date(obj.dates.created),
     modified : obj.dates.modified ? new Date(obj.dates.modified) : null
   };
-
   doc.dimensions = mindmaps.Point.fromObject(obj.dimensions);
   doc.autosave = obj.autosave;
-
   return doc;
 };
 

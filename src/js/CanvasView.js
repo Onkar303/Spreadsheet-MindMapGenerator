@@ -342,7 +342,10 @@ mindmaps.DefaultCanvasView = function() {
         top : this.zoomFactor * offsetY,
         "border-bottom" : bb
       });
-
+      
+   
+      var font = node.text.font;
+      
       // node drag behaviour
       /**
        * Only attach the drag handler once we mouse over it. this speeds
@@ -387,7 +390,7 @@ mindmaps.DefaultCanvasView = function() {
       });
     }
 
-    // text caption
+    //text caption
     var font = node.text.font;
     var $text = $("<div/>", {
       id : "node-caption-" + node.id,
@@ -400,6 +403,19 @@ mindmaps.DefaultCanvasView = function() {
       "font-style" : font.style,
       "text-decoration" : font.decoration
     }).appendTo($node);
+
+    
+    if(!node.isRoot())
+    {
+      if(node.shape === mindmaps.Shape.SHAPE_SQUARE)
+      {
+        $text.css({
+          "border-radius": "50%"
+        })
+      }
+    }
+    
+   
 
     var metrics = textMetrics.getTextMetrics(node, this.zoomFactor);
     $text.css(metrics);

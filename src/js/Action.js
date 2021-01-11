@@ -380,6 +380,44 @@ mindmaps.action.SetBranchColorAction = function(node, branchColor) {
 };
 mindmaps.action.SetBranchColorAction.prototype = new mindmaps.action.Action();
 
+
+mindmaps.action.CircleShapeAction = function(node){
+  this.event = [mindmaps.Event.SHAPE_CHANGED,node];
+
+  console.log();
+  this.execute = function(){
+    node.shape = mindmaps.Shape.SHAPE_CIRCLE
+  }
+}
+mindmaps.action.CircleShapeAction.prototype = new mindmaps.action.Action();
+
+
+mindmaps.action.SquareShapeAction = function(node){
+  this.event = [mindmaps.Event.SHAPE_CHANGED,node];
+
+  console.log("Square Action")
+  this.execute = function(){
+    node.shape = mindmaps.Shape.SHAPE_SQUARE;
+  }
+}
+
+mindmaps.action.SquareShapeAction.prototype = new mindmaps.action.Action();
+
+
+
+mindmaps.action.DefaultShapeAction = function(node){
+  this.event = [mindmaps.Event.SHAPE_CHANGED,node];
+
+  console.log("Default Action")
+
+  this.execute = function(){
+    node.shape = mindmaps.Shape.SHAPE_DEFAULT;
+  }
+}
+
+mindmaps.action.DefaultShapeAction.prototype = new mindmaps.action.Action();
+
+
 /**
 * A composite action is a group of actions.
 */

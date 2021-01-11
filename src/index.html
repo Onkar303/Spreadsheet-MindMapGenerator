@@ -121,6 +121,19 @@
 </div>
 </script>
 
+<script id="import-excel-sheet" type="text/x-jquery-tmpl">
+  <form>
+    <label for="excelSheet"> Upload Excel Sheet </excelSheet>
+    <input type="file" name="excelSheet" id="excel-sheet" accept=".xls,.xlsx" > 
+  </form>
+</script>
+
+<script id="import-google-spreadsheet" type="text/x-jquery-tmpl">
+  <form>
+    <label for="googleUrl">Enter Google Sheet URL</label>
+    <input type="url" id="spreadSheetURL" name="googleUrl"> 
+  </form>
+</script>
 
 <script id="template-inspector" type="text/x-jquery-tmpl">
 <div id="inspector">
@@ -168,6 +181,17 @@
         <td><input type="hidden" id="inspector-branch-color-picker"
           class="colorpicker" />
           <button id="inspector-button-branch-color-children" title="Apply branch color to all children" class="right buttons-small buttons-less-padding">Inherit</button>
+        </td>
+      </tr>
+      <tr>
+        <td> Shapes </td>
+        <td>
+            <div
+              class="buttonset buttons-very-small buttons-less-padding">
+              <button id="inspector-button-branch-shape-circle">Circle</button>
+              <button id="inspector-button-branch-shape-square">Square</button>
+              <button id="inspector-button-branch-shape-default">Default</button>
+            </div
         </td>
       </tr>
     </table>
@@ -235,6 +259,10 @@
   <script src="//api.filestackapi.com/filestack.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js"></script>
 
+  <!-- Added extra libraries -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+
   <!-- DEBUG -->
   <!-- set debug flag for all scripts. Will be removed in production -->
   <script type="text/javascript">
@@ -254,7 +282,7 @@
 
   <script src="js/MindMaps.js"></script>
   <script src="js/Command.js"></script>
-  <script src="js/CommandRegistry.js"></script>
+  <script src="js/CommandRegistry.js"></script> 
   <script src="js/Action.js"></script>
   <script src="js/Util.js"></script>
   <script src="js/Point.js"></script>
@@ -290,6 +318,10 @@
   <script src="js/ExportMap.js"></script>
   <script src="js/AutoSaveController.js"></script>
   <script src="js/FilePicker.js"></script>
+  <script src="js/ImportExcelSheet.js"></script>
+  <script src="js/ImportGoogleSpreadSheet.js"></script>
+  <script src="js/CircleShape.js"></script>
+  <script src="js/Shape.js"></script>
   <!-- JS:LIB:END -->
 </body>
 </html>

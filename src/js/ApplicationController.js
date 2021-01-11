@@ -68,6 +68,32 @@ mindmaps.ApplicationController = function() {
     presenter.go();
   }
 
+  function doImportExcelSheet(){
+    var presenter = new mindmaps.ImportExcelSheetPresenter(eventBus);
+    presenter.go();
+  }
+
+  function doImportGoogleSpreadSheet(){
+    // var presenter = new mindmaps.ImportGoogleSheetPresenter(eventBus);
+    // presenter.go();
+    var presenter = new mindmaps.ImportGoogleSheetPresenter();
+    presenter.go();
+    console.log("import google spread sheet");
+    //presenter.showDialog();
+  }
+
+
+  //handling circle shape 
+  function doCircleShape(){
+    var presenter = new mindmaps.CircleShape(mindmapModel);
+    presenter.customFunction();
+  }
+
+
+  function doSquareShape(){
+
+  }
+
   /**
    * Initializes the controller, registers for all commands and subscribes to
    * event bus.
@@ -93,6 +119,19 @@ mindmaps.ApplicationController = function() {
 
     var exportCommand = commandRegistry.get(mindmaps.ExportCommand);
     exportCommand.setHandler(doExportDocument);
+
+    var importExcelSheetCommand = commandRegistry.get(mindmaps.ImportExcelCommand);
+    importExcelSheetCommand.setHandler(doImportExcelSheet);
+
+    var importGoogleSpreadSheetCommand = commandRegistry.get(mindmaps.ImportGoogleSheetCommand)
+    importGoogleSpreadSheetCommand.setHandler(doImportGoogleSpreadSheet);
+
+    var CircleShapeCommand = commandRegistry.get(mindmaps.CircleCommand);
+    CircleShapeCommand.setHandler(doCircleShape);
+
+    var SquareShapeCommand = commandRegistry.get(mindmaps.SquareCommand);
+    SquareShapeCommand.setHandler(doSquareShape);
+
 
     eventBus.subscribe(mindmaps.Event.DOCUMENT_CLOSED, function() {
       saveDocumentCommand.setEnabled(false);

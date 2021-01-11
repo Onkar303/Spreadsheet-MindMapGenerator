@@ -124,7 +124,14 @@ mindmaps.Event = {
    * @event
    * @param {String} message
    */
-  NOTIFICATION_ERROR: "NotificationErrorEvent"
+  NOTIFICATION_ERROR: "NotificationErrorEvent",
+
+
+ /**
+   * @event
+   * @param {String} message
+   */
+  SHAPE_CHANGED:"ShapeChangedEvent"
 };
 
 /**

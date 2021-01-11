@@ -349,3 +349,50 @@ mindmaps.ExportCommand = function() {
   this.description = "Export the mind map";
 };
 mindmaps.ExportCommand.prototype = new mindmaps.Command();
+
+
+mindmaps.ImportExcelCommand = function(){
+  this.id = "IMPORT_EXCEL_COMMAND";
+  this.icon = "ui-icon-image";
+  this.label = "Import Excel Sheet";
+  this.description = "import Excel sheet to generate mindMad"
+  this.enabled = true
+};
+
+mindmaps.ImportExcelCommand.prototype = new mindmaps.Command();
+
+
+mindmaps.ImportGoogleSheetCommand = function(){
+  this.id = "IMORT_GOOGLE_SHEET";
+  this.label = "Import Google Spread Sheet";
+  this.description = "Import Google Spread Sheet";
+  this.icon = "ui-icon-image";
+  this.enabled = true;
+};
+mindmaps.ImportGoogleSheetCommand.prototype = new mindmaps.Command();
+
+
+
+mindmaps.CircleCommand = function(){
+  this.id = "CIRCLE_COMMAND";
+  this.label = "Cirlce";
+  this.description = "Change nodes to circle";
+  this.icon = "ui-icon-image";
+  this.enabled = true;
+};
+mindmaps.CircleCommand.prototype = new mindmaps.Command();
+
+
+
+mindmaps.SquareCommand = function(){
+  this.id = "SQUARE_COMMAND";
+  this.label = "Square";
+  this.description = "Change nodes to Squares ";
+  this.icon = "ui-icon-image";
+  this.enabled = true;
+};
+
+mindmaps.SquareCommand.prototype = new mindmaps.Command();
+
+
+

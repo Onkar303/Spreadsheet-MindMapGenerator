@@ -3,7 +3,7 @@
  * @constructor
  */
 mindmaps.ExportMapView = function() {
-  var self = this;
+  var self = this ;
 
   // create dialog
   var $dialog = $("#template-export-map").tmpl().dialog({
@@ -63,7 +63,6 @@ mindmaps.ExportMapPresenter = function(eventBus, mindmapModel, view) {
   this.go = function() {
     var $img = renderer.renderAsPNG(mindmapModel.getDocument());
     view.setImage($img);
-
     // slightly delay showing the dialog. otherwise dialog is not correctly
     // centered, because the image is inserted too late
     setTimeout(function() {

@@ -270,8 +270,8 @@ mindmaps.HelpController = function(eventBus, commandRegistry) {
             maxWidth : 350,
             title : "This is your toolbar",
             content : "Those buttons do what they say. You can use them or work with keyboard shortcuts. "
-                + "Hover over the buttons for the key combinations."
-          });
+                +  "Hover over the buttons for the key combinations."
+          });    
 
       notifications.push(helpRoot, helpNavigator, helpInspector,
           helpToolbar);

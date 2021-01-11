@@ -18,9 +18,12 @@ mindmaps.InspectorView = function() {
   var $branchColorChildrenButton = $("#inspector-button-branch-color-children", $content);
   var branchColorPicker = $("#inspector-branch-color-picker", $content);
   var fontColorPicker = $("#inspector-font-color-picker", $content);
+  var $circleShapeButton = $("#inspector-button-branch-shape-circle",$content);
+  var $squareShapeButton = $("#inspector-button-branch-shape-square",$content);
+  var $defaultShapeButton = $("#inspector-button-branch-shape-default",$content);
   var $allButtons = [ $sizeDecreaseButton, $sizeIncreaseButton,
       $boldCheckbox, $italicCheckbox, $underlineCheckbox,
-      $linethroughCheckbox, $branchColorChildrenButton ];
+      $linethroughCheckbox, $branchColorChildrenButton,$circleShapeButton,$squareShapeButton,$defaultShapeButton];
   var $allColorpickers = [ branchColorPicker, fontColorPicker ];
 
   /**
@@ -108,6 +111,9 @@ mindmaps.InspectorView = function() {
   this.init = function() {
     $(".buttonset", $content).buttonset();
     $branchColorChildrenButton.button();
+    $circleShapeButton.button();
+    $squareShapeButton.button();
+    $defaultShapeButton.button();
 
     $sizeDecreaseButton.click(function() {
       if (self.fontSizeDecreaseButtonClicked) {
@@ -193,6 +199,29 @@ mindmaps.InspectorView = function() {
         self.branchColorChildrenButtonClicked();
       }
     });
+
+    $circleShapeButton.click(function(){
+        if(self.circleShapeClicked){
+          var check = $(this).prop("checked");
+          self.circleShapeClicked(check);
+        }
+    });
+
+    $squareShapeButton.click(function(){
+        if(self.squareShapeClicked)
+        {
+          self.squareShapeClicked();
+        }
+    })
+
+
+    $defaultShapeButton.click(function(){
+      if(self.defaultShapeClicked)
+        {
+          self.defaultShapeClicked();
+        }
+    })
+    
   };
 };
 
@@ -278,6 +307,24 @@ mindmaps.InspectorPresenter = function(eventBus, mindmapModel, view) {
     mindmapModel.executeAction(action);
   }
 
+
+  view.circleShapeClicked = function(checked){
+    var action = new mindmaps.action.CircleShapeAction(mindmapModel.selectNode);
+    mindmapModel.executeAction(action);
+  }
+
+
+  view.squareShapeClicked = function(){
+    var action = new mindmaps.action.SquareShapeAction(mindmapModel.selectNode);
+    mindmapModel.executeAction(action);
+  }
+
+  
+  view.defaultShapeClicked = function(){
+    var action = new mindmaps.action.DefaultShapeAction(mindmapModel.selectNode);
+    mindmapModel.executeAction(action);
+  }
+
   /**
    * Update view on font events.
    */
@@ -292,7 +339,7 @@ mindmaps.InspectorPresenter = function(eventBus, mindmapModel, view) {
         if (mindmapModel.selectedNode === node) {
           updateView(node);
         }
-      });
+   });
 
   eventBus.subscribe(mindmaps.Event.NODE_SELECTED, function(node) {
     updateView(node);

@@ -44,7 +44,7 @@ mindmaps.CommandRegistry = function(shortcutController) {
    * 
    * @param commandType
    */
-  this.remove = function(commandType) {
+  this.remove = function(commandType){
     // TODO remove by object
     var command = this.commands[commandType];
     if (!command) {
