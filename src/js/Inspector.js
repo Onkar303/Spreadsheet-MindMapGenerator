@@ -307,21 +307,20 @@ mindmaps.InspectorPresenter = function(eventBus, mindmapModel, view) {
     mindmapModel.executeAction(action);
   }
 
-
   view.circleShapeClicked = function(checked){
-    var action = new mindmaps.action.CircleShapeAction(mindmapModel.selectNode);
+    var action = new mindmaps.action.CircleShapeAction(mindmapModel.selectedNode,mindmaps.Shape.SHAPE_CIRCLE);
     mindmapModel.executeAction(action);
   }
 
 
   view.squareShapeClicked = function(){
-    var action = new mindmaps.action.SquareShapeAction(mindmapModel.selectNode);
+    var action = new mindmaps.action.SquareShapeAction(mindmapModel.selectedNode,mindmaps.Shape.SHAPE_SQUARE);
     mindmapModel.executeAction(action);
   }
 
   
   view.defaultShapeClicked = function(){
-    var action = new mindmaps.action.DefaultShapeAction(mindmapModel.selectNode);
+    var action = new mindmaps.action.DefaultShapeAction(mindmapModel.selectedNode,mindmaps.Shape.SHAPE_DEFAULT);
     mindmapModel.executeAction(action);
   }
 

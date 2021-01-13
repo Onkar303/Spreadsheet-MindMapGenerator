@@ -123,8 +123,38 @@
 
 <script id="import-excel-sheet" type="text/x-jquery-tmpl">
   <form>
-    <label for="excelSheet"> Upload Excel Sheet </excelSheet>
-    <input type="file" name="excelSheet" id="excel-sheet" accept=".xls,.xlsx" > 
+
+    <table>
+      <tr>
+        <td>
+          <label for="excelSheet"> Upload Excel Sheet </excelSheet>
+        </td>
+        <td>
+          <input type="file" name="excelSheet" id="excel-sheet" accept=".xls,.xlsx" > 
+        </td>
+      </tr>
+
+    </table>
+
+    <h1> Preferences </h1>
+
+    <tale>
+      <tr>
+        <td>
+          <label for="Shapes">Shapes</label>
+        </td>
+        <td>
+          <select name="shapes">
+            <option value = "Circle"> Circle </option>
+            <option value = "Default"> Default </option>
+          </select>
+        </td>
+      </tr>
+    </table>
+   
+   
+   
+
   </form>
 </script>
 

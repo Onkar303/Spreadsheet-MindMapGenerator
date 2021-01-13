@@ -405,15 +405,16 @@ mindmaps.DefaultCanvasView = function() {
     }).appendTo($node);
 
     
-    if(!node.isRoot())
-    {
-      if(node.shape === mindmaps.Shape.SHAPE_SQUARE)
-      {
-        $text.css({
-          "border-radius": "50%"
-        })
-      }
-    }
+    //Changing the shappe of the caption
+    // if(!node.isRoot())
+    // {
+    //   if(node.shape === mindmaps.Shape.SHAPE_SQUARE)
+    //   {
+    //     $text.css({
+    //       "border-radius": "50%"
+    //     })
+    //   }
+    // }
     
    
 
@@ -584,6 +585,26 @@ mindmaps.DefaultCanvasView = function() {
     var metrics = textMetrics.getTextMetrics(node, this.zoomFactor, value);
     $text.css(metrics).text(value);
   };
+
+  this.changeShape = function(node,shape){
+    console.log("change Shape method called");
+    var $text = $getNodeCaption(node);
+    if(shape === mindmaps.Shape.SHAPE_CIRCLE)
+    {
+      $text.css({
+        "border-radius":"50%"
+      })
+    }else if(shape === mindmaps.Shape.SHAPE_SQUARE){
+      $text.css({
+        "border-radius":"0%"
+      })
+    } else {
+      $text.css({
+        "border-radius":"5px"
+      })
+    }
+    this.updateNode()
+  }
 
   /**
    * Get a reference to the creator tool.

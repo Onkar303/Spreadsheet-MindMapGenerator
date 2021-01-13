@@ -335,6 +335,10 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
       view.applyViewZoom();
       view.scaleMap();
     });
+
+    eventBus.subscribe(mindmaps.Event.SHAPE_CHANGED,function(node,shape){
+      view.changeShape(node,shape);
+    })
   }
 
   bind();

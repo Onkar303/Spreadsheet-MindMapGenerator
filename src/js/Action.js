@@ -381,8 +381,8 @@ mindmaps.action.SetBranchColorAction = function(node, branchColor) {
 mindmaps.action.SetBranchColorAction.prototype = new mindmaps.action.Action();
 
 
-mindmaps.action.CircleShapeAction = function(node){
-  this.event = [mindmaps.Event.SHAPE_CHANGED,node];
+mindmaps.action.CircleShapeAction = function(node,shape){
+  this.event = [mindmaps.Event.SHAPE_CHANGED,node,shape];
 
   console.log();
   this.execute = function(){
@@ -392,8 +392,8 @@ mindmaps.action.CircleShapeAction = function(node){
 mindmaps.action.CircleShapeAction.prototype = new mindmaps.action.Action();
 
 
-mindmaps.action.SquareShapeAction = function(node){
-  this.event = [mindmaps.Event.SHAPE_CHANGED,node];
+mindmaps.action.SquareShapeAction = function(node,shape){
+  this.event = [mindmaps.Event.SHAPE_CHANGED,node,shape];
 
   console.log("Square Action")
   this.execute = function(){
@@ -405,10 +405,8 @@ mindmaps.action.SquareShapeAction.prototype = new mindmaps.action.Action();
 
 
 
-mindmaps.action.DefaultShapeAction = function(node){
-  this.event = [mindmaps.Event.SHAPE_CHANGED,node];
-
-  console.log("Default Action")
+mindmaps.action.DefaultShapeAction = function(node,shape){
+  this.event = [mindmaps.Event.SHAPE_CHANGED,node,shape];
 
   this.execute = function(){
     node.shape = mindmaps.Shape.SHAPE_DEFAULT;

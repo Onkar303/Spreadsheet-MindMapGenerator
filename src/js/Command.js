@@ -372,6 +372,8 @@ mindmaps.ImportGoogleSheetCommand = function(){
 mindmaps.ImportGoogleSheetCommand.prototype = new mindmaps.Command();
 
 
+// Added by Onkar
+// two additional options for change the shape of all the nodes in the mind map canvas
 
 mindmaps.CircleCommand = function(){
   this.id = "CIRCLE_COMMAND";
