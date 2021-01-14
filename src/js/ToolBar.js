@@ -236,29 +236,29 @@ mindmaps.ToolBarMenu = function(title, icon) {
 };
 
 
-mindmaps.ShapeBarMenu= function(title,icon){
-  var self = this;
-  this.$menuWrapper = $("<span/>", {
-    "class" : "Shapemenu-wrapper"
-  }).hover(function() {
-    self.$menu.show();
-  }, function() {
-    self.$menu.hide();
-  });
+// mindmaps.ShapeBarMenu= function(title,icon){
+//   var self = this;
+//   this.$menuWrapper = $("<span/>", {
+//     "class" : "Shapemenu-wrapper"
+//   }).hover(function() {
+//     self.$menu.show();
+//   }, function() {
+//     self.$menu.hide();
+//   });
 
-  this.$menuButton = $("<button/>").button({
-    label : title,
-    icons : {
-      primary : icon,
-      secondary : "ui-icon-triangle-1-s"
-    }
-  }).appendTo(this.$menuWrapper);
+//   this.$menuButton = $("<button/>").button({
+//     label : title,
+//     icons : {
+//       primary : icon,
+//       secondary : "ui-icon-triangle-1-s"
+//     }
+//   }).appendTo(this.$menuWrapper);
 
-  this.$menu = $("<div/>", {
-    "class" : "Shapemenu"
-  }).click(function() {
-    self.$menu.hide();
-  }).appendTo(this.$menuWrapper);
+//   this.$menu = $("<div/>", {
+//     "class" : "Shapemenu"
+//   }).click(function() {
+//     self.$menu.hide();
+//   }).appendTo(this.$menuWrapper);
 
   /**
    * Adds a new button entry to the menu.
@@ -266,32 +266,32 @@ mindmaps.ShapeBarMenu= function(title,icon){
    * @param {mindmaps.ToolBarButton|mindmaps.ToolBarButtons[]} buttons a
    *            single button or an array of buttons
    */
-  this.add = function(buttons) {
-    if (!Array.isArray(buttons)) {
-      buttons = [ buttons ];
-    }
+//   this.add = function(buttons) {
+//     if (!Array.isArray(buttons)) {
+//       buttons = [ buttons ];
+//     }
 
-    buttons.forEach(function(button) {
-      var $button = button.asJquery().removeClass("ui-corner-all")
-          .addClass("Shapemenu-item");
-      this.$menu.append($button);
-    }, this);
+//     buttons.forEach(function(button) {
+//       var $button = button.asJquery().removeClass("ui-corner-all")
+//           .addClass("Shapemenu-item");
+//       this.$menu.append($button);
+//     }, this);
 
-    // last item gets rounded corners
-    this.$menu.children().last().addClass("ui-corner-bottom").prev()
-        .removeClass("ui-corner-bottom");
-  };
+//     // last item gets rounded corners
+//     this.$menu.children().last().addClass("ui-corner-bottom").prev()
+//         .removeClass("ui-corner-bottom");
+//   };
 
-  /**
-   * Returns the underlying jquery object.
-   * 
-   * @returns {jQuery}
-   */
-  this.getContent = function() {
-    return this.$menuWrapper;
-  };
+//   /**
+//    * Returns the underlying jquery object.
+//    * 
+//    * @returns {jQuery}
+//    */
+//   this.getContent = function() {
+//     return this.$menuWrapper;
+//   };
 
-}
+// }
 
 /**
  * Creates a new ToolBarPresenter.
@@ -333,7 +333,7 @@ mindmaps.ToolBarPresenter = function(eventBus, commandRegistry, view,
 
   // clipboard buttons.
   var clipboardCommands = [ mindmaps.CopyNodeCommand,
-      mindmaps.CutNodeCommand, mindmaps.PasteNodeCommand,mindmaps.CircleCommand,mindmaps.SquareCommand];
+      mindmaps.CutNodeCommand, mindmaps.PasteNodeCommand];
   var clipboardButtons = commandsToButtons(clipboardCommands);
   view.addButtonGroup(clipboardButtons, view.alignLeft);
 
