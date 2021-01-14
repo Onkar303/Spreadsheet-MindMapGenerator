@@ -1,6 +1,10 @@
-//Added by Onkar
+/**
+ * Added by Onkar
+ * */
 
-//Import excel sheet dialog created using jquery 
+/**
+ *  Import excel sheet dialog created using jquery 
+ * */
 mindmaps.ImportExcelSheet = function(mindMapModel){
     this.$popUp = $('#import-excel-sheet').tmpl().dialog({
         autoOpen : false,
@@ -30,7 +34,9 @@ mindmaps.ImportExcelSheet = function(mindMapModel){
 }
 
 
-//Fetching data from excel sheet
+/**
+ *  Fetching data from excel sheet
+ * */
 async function readExcelSheet(mindmapModel){
     var input = document.getElementById('excel-sheet');
     var excelSheet = input.files[0];
@@ -58,8 +64,10 @@ async function readExcelSheet(mindmapModel){
 }
 
 
-//Convering data to json Object
-//@params {excelJson} 
+/**
+ * Convering data to json Object
+ * @params {excelJson} 
+ * */
 function convertToMindMapJson(excelData,mindMapModel) {
 
 
@@ -96,7 +104,9 @@ function convertToMindMapJson(excelData,mindMapModel) {
 
 
 
-//Present the dialog to the user
+/**
+ * Present the dialog to the user
+ * */
 mindmaps.ImportExcelSheetPresenter = function(mindMapModel){
     //console.log('import sheet constructor function called');
     this.go = function (){

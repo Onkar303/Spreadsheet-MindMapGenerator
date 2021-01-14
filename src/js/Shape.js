@@ -1,3 +1,8 @@
+/**
+ *  Added by Onkar
+ * 
+ */
+
 mindmaps.Shape = {
 
     SHAPE_CIRCLE:"Circle",

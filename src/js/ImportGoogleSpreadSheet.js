@@ -1,6 +1,13 @@
-//ADded by Onkar
+/**
+ *  Added by Onkar
+ * */
 
-//Fetching it form the document and adding the it duing initialization
+/** 
+ * Fetching the template from the document and converting it to a dialog using jquery
+ * 
+ * @param {mindmaps.mindMapMode} mindMapModel
+ * 
+*/
 mindmaps.ImportGoogleSheet = function(mindMapModel){
     this.$popUp = $('#import-google-spreadsheet').tmpl().dialog({
         autoOpen : false,
@@ -35,7 +42,10 @@ mindmaps.ImportGoogleSheet = function(mindMapModel){
 }
 
 
-//fetching json object from google sheet
+/** fetching json object from google sheet
+ * 
+ * 
+ * */  
 function fetchGoogleSheetURL(mindMapModel){
     var input = document.getElementById('spreadSheetURL').value;
 
@@ -56,7 +66,15 @@ function fetchGoogleSheetURL(mindMapModel){
 }
 
 
-//  getting the json Object
+/**
+ * 
+ * Used for fetching data from the given url in the object
+ * 
+ * @param {String} url
+ * @param {mindmaps.MindMapModel} mindMapModel 
+ * 
+ * 
+*/
 function fetchSheetJson(url,mindMapModel){
     $.ajax({url:url+"?alt=json",crossDomain:true,success:function(result){
         convertToMindMapModel(result.feed.entry,mindMapModel)
@@ -64,7 +82,14 @@ function fetchSheetJson(url,mindMapModel){
         console.log(error)
     }})    
 }
-
+/**
+ * 
+ * 
+ * Used for makng a model of a 
+ * 
+ * @param {Object} responseObject
+ * @param {mindmaps.MindMapModel} mindMapModel 
+ * */ 
 function convertToMindMapModel(responseObject,mindMapModel){
 
     var mpDocument = mindMapModel.getDocument();
@@ -93,7 +118,13 @@ function convertToMindMapModel(responseObject,mindMapModel){
 
 
 
-// Presenting it to the Canvas
+/**
+ *  Presenting it to the Canvas using a presenter and followinf the design  pattern of the entire project.
+ *  
+ *  @param {mindmaps.MindMapModel} mindMapModel
+ *  @param {mindmaps.EventBus} eventbus
+ *  
+ * */  
 mindmaps.ImportGoogleSheetPresenter = function(mindMapModel,eventbus){
     this.go = function(){
         var popUp = new mindmaps.ImportGoogleSheet(mindMapModel);
