@@ -126,22 +126,16 @@
 
     <table>
       <tr>
-        <td>
-          <label for="excelSheet"> Upload Excel Sheet </excelSheet>
+        <td style="padding:5px 5px 5px 5px;">
+          <label for="excelSheet" style="font-weight: bold;"> <b>Upload Excel Sheet</b> </excelSheet>
         </td>
         <td>
           <input type="file" name="excelSheet" id="excel-sheet" accept=".xls,.xlsx" > 
         </td>
       </tr>
-
-    </table>
-
-    <h1> Preferences </h1>
-
-    <tale>
       <tr>
-        <td>
-          <label for="Shapes">Shapes</label>
+        <td style="padding:5px 5px 5px 5px;">
+          <label for="Shapes" style="font-weight: bold;">Set Shape</label>
         </td>
         <td>
           <select name="shapes">
@@ -160,8 +154,30 @@
 
 <script id="import-google-spreadsheet" type="text/x-jquery-tmpl">
   <form>
-    <label for="googleUrl">Enter Google Sheet URL</label>
-    <input type="url" id="spreadSheetURL" name="googleUrl"> 
+    <table>
+      <tr>
+        <td style="padding:5px 5px 5px 5px;">
+          <label for="googleUrl" style="font-weight: bold;">Google Sheet URL</label>
+        </td>
+        <td>
+          <input type="url" id="spreadSheetURL" name="googleUrl"> 
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:5px 5px 5px 5px;">
+          <label for="Shapes" style="font-weight: bold;">Set Shape</label>
+        </td>
+        <td>
+          <select name="shapes">
+            <option value = "Circle"> Circle </option>
+            <option value = "Default"> Default </option>
+          </select>
+        </td>
+      </tr>
+
+    </table>
+    
+  
   </form>
 </script>
 

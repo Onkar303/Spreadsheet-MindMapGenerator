@@ -7,7 +7,7 @@ mindmaps.ImportGoogleSheet = function(){
         modal : true,
         zIndex : 5000,
         width : "auto",
-        title:"Enter Google Sheet URL",
+        title:"Generate From Google Sheet",
         height : "auto",
         buttons:{
             'Submit':function(){
