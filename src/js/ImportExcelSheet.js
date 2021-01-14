@@ -1,7 +1,7 @@
 //Added by Onkar
 
 //Import excel sheet dialog created using jquery 
-mindmaps.ImportExcelSheet = function(){
+mindmaps.ImportExcelSheet = function(mindMapModel){
     this.$popUp = $('#import-excel-sheet').tmpl().dialog({
         autoOpen : false,
         modal : true,
@@ -11,7 +11,7 @@ mindmaps.ImportExcelSheet = function(){
         title:"Please Choose an Excel Sheet",
         buttons: {
             "Submit":function(){
-                readExcelSheet();
+                readExcelSheet(mindMapModel);
                 $(this).dialog("close");
             },
             "Cancel":function(){
@@ -31,7 +31,7 @@ mindmaps.ImportExcelSheet = function(){
 
 
 //Fetching data from excel sheet
-async function readExcelSheet(){
+async function readExcelSheet(mindmapModel){
     var input = document.getElementById('excel-sheet');
     var excelSheet = input.files[0];
     var reader = new FileReader();
@@ -45,9 +45,11 @@ async function readExcelSheet(){
             // Here is your object
             var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
             var json_object = JSON.stringify(XL_row_object);
-            console.log(JSON.parse(json_object));
+            //console.log(JSON.parse(json_object));
+            console.log(XL_row_object);
+            //console.log(XL_row_object.length);
 
-            convertToMindMapJson(json_object);
+            convertToMindMapJson(XL_row_object,mindmapModel);
             jQuery( '#xlx_json' ).val( json_object );
         })
     })
@@ -57,9 +59,33 @@ async function readExcelSheet(){
 
 
 //Convering data to json Object
-function convertToMindMapJson(excelJson) {
-    var mpDocument = new mindmaps.Document();
+//@params {excelJson} 
+function convertToMindMapJson(excelData,mindMapModel) {
+
+
+    var mpDocument = mindMapModel.getDocument();
+    var shapePreference = document.getElementById("excelShapeOptions").value
+
+    console.log(shapePreference);
     mpDocument.title = "Sample";
+    //mpDocument.mindmap = new mindmaps.Mindmap();
+
+    excelData.forEach(element => {
+        var newNode = new mindmaps.Node();
+        newNode.parent = mpDocument.id
+        newNode.text.caption = element.Column1
+        if(shapePreference === "Circle"){
+            newNode.shape = mindmaps.Shape.SHAPE_CIRCLE
+        } else if (shapePreference === "Square"){
+            newNode.shape = mindmaps.Shape.SHAPE_SQUARE
+        } else {
+            newNode.shape = mindmaps.Shape.SHAPE_DEFAULT
+        }
+        mpDocument.mindmap.root.children.add(newNode)
+    })
+
+    console.log(mpDocument);
+    mindMapModel.setDocument(mpDocument);
 }
 
 
@@ -71,11 +97,11 @@ function convertToMindMapJson(excelJson) {
 
 
 //Present the dialog to the user
-mindmaps.ImportExcelSheetPresenter = function(eventbus,view){
+mindmaps.ImportExcelSheetPresenter = function(mindMapModel){
     //console.log('import sheet constructor function called');
     this.go = function (){
         console.log('go function called');
-        var dialog = new mindmaps.ImportExcelSheet();
+        var dialog = new mindmaps.ImportExcelSheet(mindMapModel);
         dialog.showDialog();
     }
 }

@@ -1,3 +1,13 @@
+
+/** 
+ * Added by onkar Kalpavriksha
+ * 
+ * @param {mindmaps.mindMapModel} mindMapModel
+ *
+ * 
+ * */
+ 
+
 mindmaps.CircleShape = function(mindMapModel){
     var mindMapDocument = mindMapModel.getDocument();
     console.log(mindMapDocument);

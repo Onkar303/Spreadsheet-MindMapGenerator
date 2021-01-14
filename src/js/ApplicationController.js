@@ -69,14 +69,14 @@ mindmaps.ApplicationController = function() {
   }
 
   function doImportExcelSheet(){
-    var presenter = new mindmaps.ImportExcelSheetPresenter(eventBus);
+    var presenter = new mindmaps.ImportExcelSheetPresenter(mindmapModel);
     presenter.go();
   }
 
   function doImportGoogleSpreadSheet(){
     // var presenter = new mindmaps.ImportGoogleSheetPresenter(eventBus);
     // presenter.go();
-    var presenter = new mindmaps.ImportGoogleSheetPresenter();
+    var presenter = new mindmaps.ImportGoogleSheetPresenter(mindmapModel,eventBus);
     presenter.go();
     console.log("import google spread sheet");
     //presenter.showDialog();
