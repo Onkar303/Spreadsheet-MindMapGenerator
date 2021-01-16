@@ -406,15 +406,23 @@ mindmaps.DefaultCanvasView = function() {
 
     
     //Changing the shappe of the caption
-    // if(!node.isRoot())
-    // {
-    //   if(node.shape === mindmaps.Shape.SHAPE_SQUARE)
-    //   {
-    //     $text.css({
-    //       "border-radius": "50%"
-    //     })
-    //   }
-    // }
+    if(!node.isRoot())
+    {
+      if(node.shape === mindmaps.Shape.SHAPE_SQUARE)
+      {
+        $text.css({
+          "border-radius": "0%"
+        })
+      } else if (node.shape === mindmaps.Shape.SHAPE_CIRCLE){
+        $text.css({
+          "border-radius":"50%"
+        })
+      } else {
+        $text.css({
+          "border-radius":"5px"
+        })
+      }
+    }
     
    
 

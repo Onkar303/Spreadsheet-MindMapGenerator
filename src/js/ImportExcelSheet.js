@@ -74,7 +74,7 @@ function convertToMindMapJson(excelData,mindMapModel) {
     var mpDocument = mindMapModel.getDocument();
     var shapePreference = document.getElementById("excelShapeOptions").value
 
-    console.log(shapePreference);
+    console.log(excelData);
     mpDocument.title = "Sample";
     //mpDocument.mindmap = new mindmaps.Mindmap();
 

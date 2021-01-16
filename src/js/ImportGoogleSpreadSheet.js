@@ -112,7 +112,7 @@ function convertToMindMapModel(responseObject,mindMapModel){
         mpDocument.mindmap.root.children.add(newNode)
     })
     console.log(mpDocument);
-
+     
     mindMapModel.setDocument(mpDocument);
 }
 
