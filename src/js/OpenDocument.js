@@ -156,6 +156,7 @@ mindmaps.OpenDocumentPresenter = function(eventBus, mindmapModel, view, filePick
         eventBus.publish(mindmaps.Event.NOTIFICATION_ERROR, 'File is not a valid mind map!');
         throw new Error('Error while opening map from hdd', e);
       }
+      console.log(doc);
       mindmapModel.setDocument(doc);
       view.hideOpenDialog();
     };

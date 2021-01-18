@@ -69,30 +69,37 @@ async function readExcelSheet(mindmapModel){
  * @params {excelJson} 
  * */
 function convertToMindMapJson(excelData,mindMapModel) {
-
-
-    var mpDocument = mindMapModel.getDocument();
+    //var mpDocument = mindMapModel.getDocument();
+    var mpDocument = new mindmaps.Document();
     var shapePreference = document.getElementById("excelShapeOptions").value
+    mpDocument.title = "Sample"
+    var keyNames = Object.keys(excelData[0]);
+ 
+    console.log(excelData)
+    mpDocument.mindmap.root.text.caption = keyNames[0];
 
-    console.log(excelData);
-    mpDocument.title = "Sample";
-    //mpDocument.mindmap = new mindmaps.Mindmap();
-
+    // console.log(excelData)
     excelData.forEach(element => {
         var newNode = new mindmaps.Node();
-        newNode.parent = mpDocument.id
-        newNode.text.caption = element.Column1
-        if(shapePreference === "Circle"){
+        newNode.parent = mpDocument.mindmap.root
+        newNode.text.caption = element[keyNames[0]]
+        //newNode.children = [];
+
+        newNode.offset.x = Math.random() * 500;
+        newNode.offset.y = Math.random() * 500;
+        
+        if(shapePreference === "Circle"){ 
             newNode.shape = mindmaps.Shape.SHAPE_CIRCLE
         } else if (shapePreference === "Square"){
             newNode.shape = mindmaps.Shape.SHAPE_SQUARE
         } else {
             newNode.shape = mindmaps.Shape.SHAPE_DEFAULT
         }
-        mpDocument.mindmap.root.children.add(newNode)
+        mpDocument.mindmap.root.children.add(newNode);
+        mpDocument.mindmap.nodes.add(newNode);
     })
 
-    console.log(mpDocument);
+    console.log(mpDocument) 
     mindMapModel.setDocument(mpDocument);
 }
 

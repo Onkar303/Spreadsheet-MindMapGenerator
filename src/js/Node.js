@@ -79,12 +79,13 @@ mindmaps.Node.fromObject = function(obj) {
   node.foldChildren = obj.foldChildren;
   node.branchColor = obj.branchColor;
 
-  // extract all children from array of objects
+  //extract all children from array of objects
+
   obj.children.forEach(function(child) {
     var childNode = mindmaps.Node.fromObject(child);
-    node.addChild(childNode);
+     node.addChild(childNode);
   });
-
+  
   return node;
 };
 
