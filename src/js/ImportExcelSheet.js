@@ -139,7 +139,8 @@ function convertToMindMapJsonForRow(excelData,mindMapModel) {
             if(j === 0){
                 var parentNode = new mindmaps.Node();
                 parentNode.parent = mpDocument.mindmap.root
-                parentNode.text.caption = excelData[i][keyNames[j]] 
+                parentNode.text.caption = excelData[i][keyNames[j]]
+                parentNode.branchColor = mindmaps.Util.randomColor();
             
                 parentNode.offset.x = coordinates.xValues[i+1]
                 parentNode.offset.y = coordinates.yValues[i+1]
@@ -156,6 +157,7 @@ function convertToMindMapJsonForRow(excelData,mindMapModel) {
                 var newNode = new mindmaps.Node();
                 newNode.parent = parentNode
                 newNode.text.caption = keyNames[j] + " : " +  excelData[i][keyNames[j]] 
+                newNode.branchColor = parentNode.branchColor
             
                 newNode.offset.x = 500
                 newNode.offset.y = 500
@@ -189,6 +191,7 @@ function convertToMindMapJsonForRow(excelData,mindMapModel) {
 /**
  * generating coordinates for diplaying it on the canvas
  * 
+ * @returns {Object}
  * 
 */
 function generateCoordinates(radius, steps, centerX, centerY){

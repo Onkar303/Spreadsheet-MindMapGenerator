@@ -221,3 +221,13 @@ function getSimpleMap() {
 
   return mm;
 }
+
+
+/**
+ * Description:- generating a random color generator
+ * 
+ * @returns Color
+ *  */  
+function randomColorGenerator(){
+  return Math.floor(Math.random()*16777215).toString(16);
+}
