@@ -37,7 +37,9 @@ mindmaps.ImportExcelSheet = function(mindMapModel){
 
 
 /**
- *  Fetching data from excel sheet
+ * Description:- Fetching data from excel sheet
+ * 
+ * @param {mindmaps.mindMapModel}
  * */
 async function readExcelSheet(mindmapModel){
     var input = document.getElementById('excel-sheet');
@@ -67,7 +69,7 @@ async function readExcelSheet(mindmapModel){
 
 
 /**
- * Convering data to json Object for each Column
+ * Description:- Converting data to json Object for each Column
  * 
  * @param {JSON} excelData
  * @param {mindmaps.mindMapModel} mindMapModel
@@ -109,7 +111,7 @@ function convertToMindMapJsonForColumn(excelData,mindMapModel) {
 
 
 /**
- * Added by Onkar
+ * 
  * 
  * Description:- To parse each row of a table and then generate a mindmap depenfing upton the attributes
  * 
@@ -127,19 +129,20 @@ function convertToMindMapJsonForRow(excelData,mindMapModel) {
  
     console.log(excelData)
     mpDocument.mindmap.root.text.caption = "Central Idea"; 
-    
-    excelData.forEach(element => {
+    var coordinates = generateCoordinates(500,excelData.length + 1,0,0);
 
-        var keyNames =  Object.keys(element)
-        for(var i = 0 ; i <keyNames.length ; i++ )
+    for (var i = 0; i < excelData.length ; i++)
+    {
+        var keyNames =  Object.keys(excelData[i])
+        for(var j = 0 ; j <keyNames.length ; j++ )
         {
-            if(i === 0){
+            if(j === 0){
                 var parentNode = new mindmaps.Node();
                 parentNode.parent = mpDocument.mindmap.root
-                parentNode.text.caption = element[keyNames[i]] 
+                parentNode.text.caption = excelData[i][keyNames[j]] 
             
-                parentNode.offset.x = Math.random() * 500;
-                parentNode.offset.y = Math.random() * 500;
+                parentNode.offset.x = coordinates.xValues[i+1]
+                parentNode.offset.y = coordinates.yValues[i+1]
             
                 if(shapePreference === "Circle"){ 
                     parentNode.shape = mindmaps.Shape.SHAPE_CIRCLE
@@ -152,10 +155,10 @@ function convertToMindMapJsonForRow(excelData,mindMapModel) {
             } else {
                 var newNode = new mindmaps.Node();
                 newNode.parent = parentNode
-                newNode.text.caption = keyNames[i] + " : " + element[keyNames[i]] 
+                newNode.text.caption = keyNames[j] + " : " +  excelData[i][keyNames[j]] 
             
-                newNode.offset.x = Math.random() * 500;
-                newNode.offset.y = Math.random() * 500;
+                newNode.offset.x = 500
+                newNode.offset.y = 500
             
                 if(shapePreference === "Circle"){ 
                     newNode.shape = mindmaps.Shape.SHAPE_CIRCLE
@@ -169,13 +172,37 @@ function convertToMindMapJsonForRow(excelData,mindMapModel) {
             
             //mpDocument.mindmap.nodes.add(newNode);
         }
-        return 
-    })
+    }
+
+    // excelData.forEach(element => {
+
+       
+    // })
 
     // console.log(excelData)
     console.log(mpDocument) 
     mindMapModel.setDocument(mpDocument);
 }
+
+
+
+/**
+ * generating coordinates for diplaying it on the canvas
+ * 
+ * 
+*/
+function generateCoordinates(radius, steps, centerX, centerY){
+    var xValues = [centerX];
+    var yValues = [centerY];
+    for (var i = 1; i < steps; i++) {
+        xValues[i] = (centerX + radius * Math.cos(Math.PI * i / steps*2-Math.PI/2));
+        yValues[i] = (centerY + radius * Math.sin(Math.PI * i / steps*2-Math.PI/2));
+   }
+   return {
+       xValues,yValues
+   }
+}
+
 
 
 
@@ -187,7 +214,8 @@ function convertToMindMapJsonForRow(excelData,mindMapModel) {
 
 
 /**
- * Present the dialog to the user
+ * Description:- Present the dialog to the user
+ * 
  * */
 mindmaps.ImportExcelSheetPresenter = function(mindMapModel){
     //console.log('import sheet constructor function called');
