@@ -3,7 +3,9 @@
  * */
 
 /**
- *  Import excel sheet dialog created using jquery 
+ * Description:- Import excel sheet dialog created using jquery 
+ * 
+ * @param {mindmaps.mindMapModel} mindmapModel
  * */
 mindmaps.ImportExcelSheet = function(mindMapModel){
     this.$popUp = $('#import-excel-sheet').tmpl().dialog({
@@ -65,8 +67,10 @@ async function readExcelSheet(mindmapModel){
 
 
 /**
- * Convering data to json Object
- * @params {excelJson} 
+ * Convering data to json Object for each Column
+ * 
+ * @param {JSON} excelData
+ * @param {mindmaps.mindMapModel} mindMapModel
  * */
 function convertToMindMapJsonForColumn(excelData,mindMapModel) {
     //var mpDocument = mindMapModel.getDocument();
@@ -103,6 +107,17 @@ function convertToMindMapJsonForColumn(excelData,mindMapModel) {
     mindMapModel.setDocument(mpDocument);
 }
 
+
+/**
+ * Added by Onkar
+ * 
+ * Description:- To parse each row of a table and then generate a mindmap depenfing upton the attributes
+ * 
+ * @param {JSON} excelData
+ * @param {mindmaps.mindMapModel} mindMapModel
+ * 
+ * 
+ */
 
 function convertToMindMapJsonForRow(excelData,mindMapModel) {
     //var mpDocument = mindMapModel.getDocument();
