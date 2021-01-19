@@ -55,7 +55,7 @@ async function readExcelSheet(mindmapModel){
             console.log(XL_row_object);
             //console.log(XL_row_object.length);
 
-            convertToMindMapJson(XL_row_object,mindmapModel);
+            convertToMindMapJsonForRow(XL_row_object,mindmapModel);
             jQuery( '#xlx_json' ).val( json_object );
         })
     })
@@ -68,7 +68,7 @@ async function readExcelSheet(mindmapModel){
  * Convering data to json Object
  * @params {excelJson} 
  * */
-function convertToMindMapJson(excelData,mindMapModel) {
+function convertToMindMapJsonForColumn(excelData,mindMapModel) {
     //var mpDocument = mindMapModel.getDocument();
     var mpDocument = new mindmaps.Document();
     var shapePreference = document.getElementById("excelShapeOptions").value
@@ -102,6 +102,66 @@ function convertToMindMapJson(excelData,mindMapModel) {
     console.log(mpDocument) 
     mindMapModel.setDocument(mpDocument);
 }
+
+
+function convertToMindMapJsonForRow(excelData,mindMapModel) {
+    //var mpDocument = mindMapModel.getDocument();
+    var mpDocument = new mindmaps.Document();
+    var shapePreference = document.getElementById("excelShapeOptions").value
+    mpDocument.title = "Sample"
+ 
+    console.log(excelData)
+    mpDocument.mindmap.root.text.caption = "Central Idea"; 
+    
+    excelData.forEach(element => {
+
+        var keyNames =  Object.keys(element)
+        for(var i = 0 ; i <keyNames.length ; i++ )
+        {
+            if(i === 0){
+                var parentNode = new mindmaps.Node();
+                parentNode.parent = mpDocument.mindmap.root
+                parentNode.text.caption = element[keyNames[i]] 
+            
+                parentNode.offset.x = Math.random() * 500;
+                parentNode.offset.y = Math.random() * 500;
+            
+                if(shapePreference === "Circle"){ 
+                    parentNode.shape = mindmaps.Shape.SHAPE_CIRCLE
+                } else if (shapePreference === "Square"){
+                    parentNode.shape = mindmaps.Shape.SHAPE_SQUARE
+                } else {
+                    parentNode.shape = mindmaps.Shape.SHAPE_DEFAULT
+                }
+                mpDocument.mindmap.root.children.add(parentNode);
+            } else {
+                var newNode = new mindmaps.Node();
+                newNode.parent = parentNode
+                newNode.text.caption = keyNames[i] + " : " + element[keyNames[i]] 
+            
+                newNode.offset.x = Math.random() * 500;
+                newNode.offset.y = Math.random() * 500;
+            
+                if(shapePreference === "Circle"){ 
+                    newNode.shape = mindmaps.Shape.SHAPE_CIRCLE
+                } else if (shapePreference === "Square"){
+                    newNode.shape = mindmaps.Shape.SHAPE_SQUARE
+                } else {
+                    newNode.shape = mindmaps.Shape.SHAPE_DEFAULT
+                }
+                parentNode.children.add(newNode);
+            }
+            
+            //mpDocument.mindmap.nodes.add(newNode);
+        }
+        return 
+    })
+
+    // console.log(excelData)
+    console.log(mpDocument) 
+    mindMapModel.setDocument(mpDocument);
+}
+
 
 
 // function getFile(){
