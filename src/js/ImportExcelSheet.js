@@ -129,11 +129,14 @@ function convertToMindMapJsonForRow(excelData,mindMapModel) {
  
     console.log(excelData)
     mpDocument.mindmap.root.text.caption = "Central Idea"; 
-    var coordinates = generateCoordinates(500,excelData.length + 1,0,0);
+    var coordinates = generateCircleCoordinates(300,excelData.length + 1,0,0);
+    
 
     for (var i = 0; i < excelData.length ; i++)
     {
+        
         var keyNames =  Object.keys(excelData[i])
+        var lineCoordinate;
         for(var j = 0 ; j <keyNames.length ; j++ )
         {
             if(j === 0){
@@ -144,7 +147,7 @@ function convertToMindMapJsonForRow(excelData,mindMapModel) {
             
                 parentNode.offset.x = coordinates.xValues[i+1]
                 parentNode.offset.y = coordinates.yValues[i+1]
-            
+                lineCoordinate =  generateCircleCoordinates(200,keyNames.length - 1,coordinates.xValues[i+1],coordinates.yValues[i+1])
                 if(shapePreference === "Circle"){ 
                     parentNode.shape = mindmaps.Shape.SHAPE_CIRCLE
                 } else if (shapePreference === "Square"){
@@ -158,9 +161,10 @@ function convertToMindMapJsonForRow(excelData,mindMapModel) {
                 newNode.parent = parentNode
                 newNode.text.caption = keyNames[j] + " : " +  excelData[i][keyNames[j]] 
                 newNode.branchColor = parentNode.branchColor
-            
-                newNode.offset.x = 500
-                newNode.offset.y = 500
+                
+
+                newNode.offset.x = lineCoordinate.xValues[j-1]
+                newNode.offset.y = lineCoordinate.yValues[j-1]
             
                 if(shapePreference === "Circle"){ 
                     newNode.shape = mindmaps.Shape.SHAPE_CIRCLE
@@ -191,10 +195,15 @@ function convertToMindMapJsonForRow(excelData,mindMapModel) {
 /**
  * generating coordinates for diplaying it on the canvas
  * 
+ * @param {int} radius
+ * @param {int} steps
+ * @param {int} centerX
+ * @param {int} centerY
+ * 
  * @returns {Object}
  * 
 */
-function generateCoordinates(radius, steps, centerX, centerY){
+function generateCircleCoordinates(radius, steps, centerX, centerY){
     var xValues = [centerX];
     var yValues = [centerY];
     for (var i = 1; i < steps; i++) {
@@ -204,6 +213,47 @@ function generateCoordinates(radius, steps, centerX, centerY){
    return {
        xValues,yValues
    }
+}
+
+
+
+/**
+ * generating parabolic and line coordinates for diplaying it on the canvas
+ * 
+ * @param {int} difference
+ * @param {int} steps
+ * @param {int} centerX
+ * @param {int} centerY
+ * 
+ * @returns {Object}
+ * 
+*/
+function generateParabolicCoordinates(difference,steps,centerX, centerY){
+    var xValues = [centerX]
+    var yValues = [centerY]
+
+    //deriving the focus for the parabola from y*y = 4*a*x
+    var focus = (centerY * centerY)/(4*centerX);
+    
+    for(var i = 0 ; i<steps; i++)
+    {
+        if(i==0)
+        {
+            xValues[i] = (centerY+difference) * (centerY+difference) /(4 *focus) 
+            yValues[i] = (centerX+difference) * (centerX+difference) /(4 *focus) 
+        } else {
+            // xValues[i] = (yValues[i-1] + difference) * (yValues[i-1]+difference) / (4 * focus)
+            // xValues[i] = (xValues[i-1] + difference) * (xValues[i-1]+difference) / (4 * focus)
+
+            yValues[i] = xValues[i-1] + difference
+            xValues[i] = xValues[i-1];
+        }        
+    }
+
+
+    return {
+        xValues,yValues
+    }
 }
 
 
