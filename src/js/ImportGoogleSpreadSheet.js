@@ -77,11 +77,160 @@ function fetchGoogleSheetURL(mindMapModel){
 */
 function fetchSheetJson(url,mindMapModel){
     $.ajax({url:url+"?alt=json",crossDomain:true,success:function(result){
-        convertToMindMapModel(result.feed.entry,mindMapModel)
+        //console.log(result.feed.entry);
+        var finalData = convertToRows(result.feed.entry)
+        drawMapForRows(finalData,mindMapModel)
+        //convertToMindMapModel(result.feed.entry,mindMapModel)
     },error:function(error){
         console.log(error)
     }})    
 }
+
+
+/**
+ * 
+ * @param {Object} cells 
+ */
+function convertToRows(cells){
+
+    /**
+     * 
+     * Step 1 ) get all the data in a single object with the keys as cellLocaltion and values as cell data  
+     * 
+     * */  
+    var columnData = {}
+    cells.forEach(element => {
+            columnData[element.title.$t] = []
+            columnData[element.title.$t].push(element.content.$t)
+    })
+    console.log(columnData);
+
+
+    /**
+     * Step 2) get an array containing all cell Locations
+     *  */ 
+    var cellLocations = []
+    cells.forEach(element =>{
+            cellLocations.push(element.title.$t)
+    })
+
+
+
+    /**
+     * Retrive the header of the table
+     *  */ 
+    var rowNumber = /\d/.exec(cells[0].title.$t)
+    var tableHeaders = []
+    cells.forEach(element =>{
+        var extractedNumber = /\d/.exec(element.title.$t)
+        if(rowNumber[0] == extractedNumber[0]){
+            tableHeaders.push(element.content.$t)
+        }
+    })
+   
+
+
+    /**
+     * Step 3) Seperate the Columns and rows in different arrays
+     * */
+     var Columns = []
+     var rows = []
+     cellLocations.forEach( element =>{
+        Columns.push(/\w/.exec(element));
+        rows.push(/\d/.exec(element));
+     })
+
+
+     /**
+      * Step 4) Remove All recouring elements from both the arrays
+      *  */ 
+     Columns = remove_duplicates(Columns);
+     rows = remove_duplicates(rows);
+     
+
+     console.log(Columns)
+     console.log(rows)
+     console.log(tableHeaders);
+     console.log(createRowObject(tableHeaders))
+
+
+    
+
+
+     /**
+      * Step 5) using for the arrays we can get data for an object
+      * 
+      * */ 
+
+
+     var finalData = []
+     rows.forEach(rowNumber => {
+            var rowObject = createRowObject(tableHeaders)
+            for(var i =0 ;i<Columns.length;i++)
+            {
+                var celLocation = Columns[i] + rowNumber;
+                var data = columnData[celLocation][0];
+
+                if(!isHeader(tableHeaders,data))
+                {
+                    rowObject[tableHeaders[i]] = data
+                }
+            }
+
+            finalData.push(rowObject);
+     })
+     
+
+     return finalData
+}
+
+
+/**
+ * 
+ * @param {*} array 
+ * @param {*} data 
+ */
+function isHeader(array,data){
+
+    array.forEach(header => {
+        if(header === data){
+            return true
+        }
+    })
+
+    return false
+}
+
+
+/**
+ * 
+ * @param {*} array 
+ */
+function createRowObject(array){
+    var obj = {}
+    array.forEach(element =>{
+            obj[element] = null
+    })
+    return obj
+}
+
+/**
+ * Refe rence :- https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
+ *  */ 
+function remove_duplicates(arr) {
+    var obj = {};
+    var ret_arr = [];
+    for (var i = 0; i < arr.length; i++) {
+        obj[arr[i]] = true;
+    }
+    for (var key in obj) {
+        ret_arr.push(key);
+    }
+    return ret_arr;
+}
+
+
+
 /**
  * 
  * 
@@ -90,32 +239,104 @@ function fetchSheetJson(url,mindMapModel){
  * @param {Object} responseObject
  * @param {mindmaps.MindMapModel} mindMapModel 
  * */ 
-function convertToMindMapModel(responseObject,mindMapModel){
+// function convertToMindMapModel(responseObject,mindMapModel){
 
-    var mpDocument = mindMapModel.getDocument();
+//     var mpDocument = mindMapModel.getDocument();
+//     var shapePreference = document.getElementById("spreadSheetShapeOption").value
+//     mpDocument.title = "Sample";
+//     //mpDocument.mindmap = new mindmaps.Mindmap();
+//     console.log(mpDocument);
+//     responseObject.forEach(element =>{
+//         var newNode = new mindmaps.Node();
+//         newNode.parent = mpDocument.id
+//         newNode.text.caption = element.content.$t
+//         if(shapePreference === "Circle"){
+//             newNode.shape = mindmaps.Shape.SHAPE_CIRCLE
+//         } else if (shapePreference === "Square"){
+//             newNode.shape = mindmaps.Shape.SHAPE_SQUARE
+//         } else {
+//             newNode.shape = mindmaps.Shape.SHAPE_DEFAULT
+//         }
+//         mpDocument.mindmap.root.children.add(newNode)
+//     })
+//     console.log(mpDocument);
+//     mindMapModel.setDocument(mpDocument);
+// }
+
+
+/**
+ * 
+ * @param {*} excelData 
+ * @param {*} mindMapModel 
+ */
+function drawMapForRows(excelData,mindMapModel) {
+    //var mpDocument = mindMapModel.getDocument();
+    var mpDocument = new mindmaps.Document();
     var shapePreference = document.getElementById("spreadSheetShapeOption").value
-    mpDocument.title = "Sample";
-    //mpDocument.mindmap = new mindmaps.Mindmap();
-    console.log(mpDocument);
-    responseObject.forEach(element =>{
+    mpDocument.title = "Sample"
+ 
+    console.log(excelData)
+    mpDocument.mindmap.root.text.caption = "Central Idea"; 
+    var coordinates = mindmaps.Util.generateCircleCoordinates(300,excelData.length + 1,0,0);
+    
 
-        var newNode = new mindmaps.Node();
-        newNode.parent = mpDocument.id
-        newNode.text.caption = element.content.$t
-        if(shapePreference === "Circle"){
-            newNode.shape = mindmaps.Shape.SHAPE_CIRCLE
-        } else if (shapePreference === "Square"){
-            newNode.shape = mindmaps.Shape.SHAPE_SQUARE
-        } else {
-            newNode.shape = mindmaps.Shape.SHAPE_DEFAULT
+    for (var i = 0; i < excelData.length ; i++)
+    {
+        
+        var keyNames =  Object.keys(excelData[i])
+        var lineCoordinate;
+        for(var j = 0 ; j <keyNames.length ; j++ )
+        {
+            if(j === 0){
+                var parentNode = new mindmaps.Node();
+                parentNode.parent = mpDocument.mindmap.root
+                parentNode.text.caption = excelData[i][keyNames[j]]
+                parentNode.branchColor = mindmaps.Util.randomColor();
+            
+                parentNode.offset.x = coordinates.xValues[i+1]
+                parentNode.offset.y = coordinates.yValues[i+1]
+                lineCoordinate =  mindmaps.Util.generateCircleCoordinates(200,keyNames.length - 1,coordinates.xValues[i+1],coordinates.yValues[i+1])
+                if(shapePreference === "Circle"){ 
+                    parentNode.shape = mindmaps.Shape.SHAPE_CIRCLE
+                } else if (shapePreference === "Square"){
+                    parentNode.shape = mindmaps.Shape.SHAPE_SQUARE
+                } else {
+                    parentNode.shape = mindmaps.Shape.SHAPE_DEFAULT
+                }
+                mpDocument.mindmap.root.children.add(parentNode);
+            } else {
+                var newNode = new mindmaps.Node();
+                newNode.parent = parentNode
+                newNode.text.caption = keyNames[j] + " : " +  excelData[i][keyNames[j]] 
+                newNode.branchColor = parentNode.branchColor
+                
+
+                newNode.offset.x = lineCoordinate.xValues[j-1]
+                newNode.offset.y = lineCoordinate.yValues[j-1]
+            
+                if(shapePreference === "Circle"){ 
+                    newNode.shape = mindmaps.Shape.SHAPE_CIRCLE
+                } else if (shapePreference === "Square"){
+                    newNode.shape = mindmaps.Shape.SHAPE_SQUARE
+                } else {
+                    newNode.shape = mindmaps.Shape.SHAPE_DEFAULT
+                }
+                parentNode.children.add(newNode);
+            }
+            
+            //mpDocument.mindmap.nodes.add(newNode);
         }
-        mpDocument.mindmap.root.children.add(newNode)
-    })
-    console.log(mpDocument);
-     
+    }
+
+    // excelData.forEach(element => {
+
+       
+    // })
+
+    // console.log(excelData)
+    console.log(mpDocument) 
     mindMapModel.setDocument(mpDocument);
 }
-
 
 
 /**

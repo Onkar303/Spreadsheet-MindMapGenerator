@@ -228,6 +228,71 @@ function getSimpleMap() {
  * 
  * @returns Color
  *  */  
-function randomColorGenerator(){
+mindmaps.Util.randomColorGenerator=function(){
   return Math.floor(Math.random()*16777215).toString(16);
+}
+
+
+/**
+ * generating coordinates for diplaying it on the canvas
+ * 
+ * @param {int} radius
+ * @param {int} steps
+ * @param {int} centerX
+ * @param {int} centerY
+ * 
+ * @returns {Object}
+ * 
+*/
+mindmaps.Util.generateCircleCoordinates = function(radius, steps, centerX, centerY){
+  var xValues = [centerX];
+  var yValues = [centerY];
+  for (var i = 1; i < steps; i++) {
+      xValues[i] = (centerX + radius * Math.cos(Math.PI * i / steps*2-Math.PI/2));
+      yValues[i] = (centerY + radius * Math.sin(Math.PI * i / steps*2-Math.PI/2));
+ }
+ return {
+     xValues,yValues
+ }
+}
+
+
+
+/**
+* generating parabolic and line coordinates for diplaying it on the canvas
+* 
+* @param {int} difference
+* @param {int} steps
+* @param {int} centerX
+* @param {int} centerY
+* 
+* @returns {Object}
+* 
+*/
+mindmaps.Util.generateParabolicCoordinates= function(difference,steps,centerX, centerY){
+  var xValues = [centerX]
+  var yValues = [centerY]
+
+  //deriving the focus for the parabola from y*y = 4*a*x
+  var focus = (centerY * centerY)/(4*centerX);
+  
+  for(var i = 0 ; i<steps; i++)
+  {
+      if(i==0)
+      {
+          xValues[i] = (centerY+difference) * (centerY+difference) /(4 *focus) 
+          yValues[i] = (centerX+difference) * (centerX+difference) /(4 *focus) 
+      } else {
+          // xValues[i] = (yValues[i-1] + difference) * (yValues[i-1]+difference) / (4 * focus)
+          // xValues[i] = (xValues[i-1] + difference) * (xValues[i-1]+difference) / (4 * focus)
+
+          yValues[i] = xValues[i-1] + difference
+          xValues[i] = xValues[i-1];
+      }        
+  }
+
+
+  return {
+      xValues,yValues
+  }
 }

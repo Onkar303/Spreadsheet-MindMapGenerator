@@ -59,7 +59,7 @@ async function readExcelSheet(mindmapModel){
             console.log(XL_row_object);
             //console.log(XL_row_object.length);
 
-            convertToMindMapJsonForRow(XL_row_object,mindmapModel);
+            drawMapWithRows(XL_row_object,mindmapModel);
             jQuery( '#xlx_json' ).val( json_object );
         })
     })
@@ -69,12 +69,12 @@ async function readExcelSheet(mindmapModel){
 
 
 /**
- * Description:- Converting data to json Object for each Column
+ * Description:- Converting data to Object for each Column
  * 
  * @param {JSON} excelData
  * @param {mindmaps.mindMapModel} mindMapModel
  * */
-function convertToMindMapJsonForColumn(excelData,mindMapModel) {
+function drawMapWithColumns(excelData,mindMapModel) {
     //var mpDocument = mindMapModel.getDocument();
     var mpDocument = new mindmaps.Document();
     var shapePreference = document.getElementById("excelShapeOptions").value
@@ -120,8 +120,7 @@ function convertToMindMapJsonForColumn(excelData,mindMapModel) {
  * 
  * 
  */
-
-function convertToMindMapJsonForRow(excelData,mindMapModel) {
+function drawMapWithRows(excelData,mindMapModel) {
     //var mpDocument = mindMapModel.getDocument();
     var mpDocument = new mindmaps.Document();
     var shapePreference = document.getElementById("excelShapeOptions").value
@@ -129,7 +128,7 @@ function convertToMindMapJsonForRow(excelData,mindMapModel) {
  
     console.log(excelData)
     mpDocument.mindmap.root.text.caption = "Central Idea"; 
-    var coordinates = generateCircleCoordinates(300,excelData.length + 1,0,0);
+    var coordinates = mindmaps.Util.generateCircleCoordinates(300,excelData.length + 1,0,0);
     
 
     for (var i = 0; i < excelData.length ; i++)
@@ -147,7 +146,7 @@ function convertToMindMapJsonForRow(excelData,mindMapModel) {
             
                 parentNode.offset.x = coordinates.xValues[i+1]
                 parentNode.offset.y = coordinates.yValues[i+1]
-                lineCoordinate =  generateCircleCoordinates(200,keyNames.length - 1,coordinates.xValues[i+1],coordinates.yValues[i+1])
+                lineCoordinate =  mindmaps.Util.generateCircleCoordinates(200,keyNames.length - 1,coordinates.xValues[i+1],coordinates.yValues[i+1])
                 if(shapePreference === "Circle"){ 
                     parentNode.shape = mindmaps.Shape.SHAPE_CIRCLE
                 } else if (shapePreference === "Square"){
@@ -180,81 +179,11 @@ function convertToMindMapJsonForRow(excelData,mindMapModel) {
         }
     }
 
-    // excelData.forEach(element => {
 
-       
-    // })
-
-    // console.log(excelData)
     console.log(mpDocument) 
     mindMapModel.setDocument(mpDocument);
 }
 
-
-
-/**
- * generating coordinates for diplaying it on the canvas
- * 
- * @param {int} radius
- * @param {int} steps
- * @param {int} centerX
- * @param {int} centerY
- * 
- * @returns {Object}
- * 
-*/
-function generateCircleCoordinates(radius, steps, centerX, centerY){
-    var xValues = [centerX];
-    var yValues = [centerY];
-    for (var i = 1; i < steps; i++) {
-        xValues[i] = (centerX + radius * Math.cos(Math.PI * i / steps*2-Math.PI/2));
-        yValues[i] = (centerY + radius * Math.sin(Math.PI * i / steps*2-Math.PI/2));
-   }
-   return {
-       xValues,yValues
-   }
-}
-
-
-
-/**
- * generating parabolic and line coordinates for diplaying it on the canvas
- * 
- * @param {int} difference
- * @param {int} steps
- * @param {int} centerX
- * @param {int} centerY
- * 
- * @returns {Object}
- * 
-*/
-function generateParabolicCoordinates(difference,steps,centerX, centerY){
-    var xValues = [centerX]
-    var yValues = [centerY]
-
-    //deriving the focus for the parabola from y*y = 4*a*x
-    var focus = (centerY * centerY)/(4*centerX);
-    
-    for(var i = 0 ; i<steps; i++)
-    {
-        if(i==0)
-        {
-            xValues[i] = (centerY+difference) * (centerY+difference) /(4 *focus) 
-            yValues[i] = (centerX+difference) * (centerX+difference) /(4 *focus) 
-        } else {
-            // xValues[i] = (yValues[i-1] + difference) * (yValues[i-1]+difference) / (4 * focus)
-            // xValues[i] = (xValues[i-1] + difference) * (xValues[i-1]+difference) / (4 * focus)
-
-            yValues[i] = xValues[i-1] + difference
-            xValues[i] = xValues[i-1];
-        }        
-    }
-
-
-    return {
-        xValues,yValues
-    }
-}
 
 
 
