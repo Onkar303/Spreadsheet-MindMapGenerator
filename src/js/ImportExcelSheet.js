@@ -142,6 +142,7 @@ function drawMapWithRows(excelData,mindMapModel) {
                 var parentNode = new mindmaps.Node();
                 parentNode.parent = mpDocument.mindmap.root
                 parentNode.text.caption = excelData[i][keyNames[j]]
+                parentNode.text.font.weight = "bold"
                 parentNode.branchColor = mindmaps.Util.randomColor();
             
                 parentNode.offset.x = coordinates.xValues[i+1]

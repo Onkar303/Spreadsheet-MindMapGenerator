@@ -119,10 +119,10 @@ function convertToRows(cells){
     /**
      * Retrive the header of the table
      *  */ 
-    var rowNumber = /\d/.exec(cells[0].title.$t)
+    var rowNumber = /\d+/.exec(cells[0].title.$t)
     var tableHeaders = []
     cells.forEach(element =>{
-        var extractedNumber = /\d/.exec(element.title.$t)
+        var extractedNumber = /\d+/.exec(element.title.$t)
         if(rowNumber[0] == extractedNumber[0]){
             tableHeaders.push(element.content.$t)
         }
@@ -136,16 +136,16 @@ function convertToRows(cells){
      var Columns = []
      var rows = []
      cellLocations.forEach( element =>{
-        Columns.push(/\w/.exec(element));
-        rows.push(/\d/.exec(element));
+        Columns.push(/[a-zA-Z]+/.exec(element)[0]);
+        rows.push(/\d+/.exec(element)[0]);
      })
 
 
      /**
       * Step 4) Remove All recouring elements from both the arrays
       *  */ 
-     Columns = remove_duplicates(Columns);
-     rows = remove_duplicates(rows);
+     Columns = getUnique(Columns);
+     rows = getUnique(rows);
      
 
      console.log(Columns)
@@ -229,6 +229,22 @@ function remove_duplicates(arr) {
     return ret_arr;
 }
 
+/**
+ * Reference :- https://www.tutorialrepublic.com/faq/how-to-remove-duplicate-values-from-a-javascript-array.php
+ * 
+ * @param {Array} array 
+ */
+function getUnique(array){
+    var uniqueArray = [];
+    
+    // Loop through array values
+    for(i=0; i < array.length; i++){
+        if(uniqueArray.indexOf(array[i]) === -1) {
+            uniqueArray.push(array[i]);
+        }
+    }
+    return uniqueArray;
+}
 
 
 /**
