@@ -19,10 +19,10 @@ mindmaps.ImportGoogleSheet = function(mindMapModel){
         buttons:{
             'Submit':function(){
                 fetchGoogleSheetURL(mindMapModel);
-                $(this).dialog("close");
+                $(this).dialog("destroy");
             },
             'Cancel':function(){
-                $(this).dialog("close");
+                $(this).dialog("destroy");
             }
         }
     });
@@ -32,7 +32,7 @@ mindmaps.ImportGoogleSheet = function(mindMapModel){
     }
 
     this.closeDialog = function(){
-        this.$popUp.dialog("close");
+        this.$popUp.dialog("destroy");
     }
 
     // this.onSubmit = $("#submit-google-url").button().click(function(){

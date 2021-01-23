@@ -18,10 +18,10 @@ mindmaps.ImportExcelSheet = function(mindMapModel){
         buttons: {
             "Submit":function(){
                 readExcelSheet(mindMapModel);
-                $(this).dialog("close");
+                $(this).dialog("destroy");
             },
             "Cancel":function(){
-                $(this).dialog("close");
+                $(this).dialog("destroy");
             }
         }
     });
@@ -31,7 +31,7 @@ mindmaps.ImportExcelSheet = function(mindMapModel){
     }
 
     this.closeDialog = function(){
-        this.$popUp.dialog("close");
+        this.$popUp.dialog("destroy");
     }
 }
 
