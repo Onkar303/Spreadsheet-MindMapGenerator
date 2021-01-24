@@ -59,7 +59,7 @@ async function readExcelSheet(mindmapModel){
             console.log(XL_row_object);
             //console.log(XL_row_object.length);
 
-            drawMapWithRows(XL_row_object,mindmapModel);
+            drawMapWithRows(XL_row_object,mindmapModel,excelSheet.name);
             jQuery( '#xlx_json' ).val( json_object );
         })
     })
@@ -74,7 +74,7 @@ async function readExcelSheet(mindmapModel){
  * @param {JSON} excelData
  * @param {mindmaps.mindMapModel} mindMapModel
  * */
-function drawMapWithColumns(excelData,mindMapModel) {
+function drawMapWithColumns(excelData,mindMapModel,fileName) {
     //var mpDocument = mindMapModel.getDocument();
     var mpDocument = new mindmaps.Document();
     var shapePreference = document.getElementById("excelShapeOptions").value
@@ -120,14 +120,14 @@ function drawMapWithColumns(excelData,mindMapModel) {
  * 
  * 
  */
-function drawMapWithRows(excelData,mindMapModel) {
+function drawMapWithRows(excelData,mindMapModel,fileName) {
     //var mpDocument = mindMapModel.getDocument();
     var mpDocument = new mindmaps.Document();
     var shapePreference = document.getElementById("excelShapeOptions").value
     mpDocument.title = "Sample"
  
     console.log(excelData)
-    mpDocument.mindmap.root.text.caption = "Central Idea"; 
+    mpDocument.mindmap.root.text.caption = fileName; 
     var coordinates = mindmaps.Util.generateCircleCoordinates(300,excelData.length + 1,0,0);
     
 
