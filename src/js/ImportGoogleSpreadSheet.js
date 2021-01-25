@@ -54,7 +54,7 @@ function fetchGoogleSheetURL(mindMapModel){
     } else {
         console.log(input);
         //var spreadSheetId = /input/.exec("/([A-Z][\d])\w+/g");
-        var spreadSheetId = /([\d-_A-Z])\w+/g.exec(input);
+        var spreadSheetId = /(\d[\w-]+)/.exec(input);
         
         $.ajax({url:"https://spreadsheets.google.com/feeds/worksheets/"+ spreadSheetId[0] +"/public/basic?alt=json",crossDomain:true,success:function(result){
             fetchSheetJson(result.feed.entry[0].link[1].href,mindMapModel)
@@ -77,7 +77,7 @@ function fetchGoogleSheetURL(mindMapModel){
 */
 function fetchSheetJson(url,mindMapModel){
     $.ajax({url:url+"?alt=json",crossDomain:true,success:function(result){
-        //console.log(result.feed.entry);
+        console.log(result);
         var finalData = convertToRows(result.feed.entry)
         drawMapForRows(finalData,mindMapModel)
         //convertToMindMapModel(result.feed.entry,mindMapModel)
@@ -152,10 +152,6 @@ function convertToRows(cells){
      console.log(rows)
      console.log(tableHeaders);
      console.log(createRowObject(tableHeaders))
-
-
-    
-
 
      /**
       * Step 5) using for the arrays we can get data for an object
@@ -307,6 +303,7 @@ function drawMapForRows(excelData,mindMapModel) {
                 var parentNode = new mindmaps.Node();
                 parentNode.parent = mpDocument.mindmap.root
                 parentNode.text.caption = excelData[i][keyNames[j]]
+                parentNode.text.font.weight = "bold"
                 parentNode.branchColor = mindmaps.Util.randomColor();
             
                 parentNode.offset.x = coordinates.xValues[i+1]

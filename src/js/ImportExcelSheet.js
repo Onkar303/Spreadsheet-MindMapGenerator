@@ -1,13 +1,13 @@
 /**
  * Added by Onkar
  * */
-
 /**
  * Description:- Import excel sheet dialog created using jquery 
  * 
  * @param {mindmaps.mindMapModel} mindmapModel
  * */
 mindmaps.ImportExcelSheet = function(mindMapModel){
+    var self= this
     this.$popUp = $('#import-excel-sheet').tmpl().dialog({
         autoOpen : false,
         modal : true,
@@ -18,10 +18,10 @@ mindmaps.ImportExcelSheet = function(mindMapModel){
         buttons: {
             "Submit":function(){
                 readExcelSheet(mindMapModel);
-                $(this).dialog("destroy");
+                self.closeDialog();
             },
             "Cancel":function(){
-                $(this).dialog("destroy");
+                self.closeDialog();
             }
         }
     });
@@ -33,8 +33,29 @@ mindmaps.ImportExcelSheet = function(mindMapModel){
     this.closeDialog = function(){
         this.$popUp.dialog("destroy");
     }
+
+    this.excelChangeListener = function(){
+        var excelSheet = document.getElementById('excel-sheet')
+        excelSheet.addEventListener("change",function(){
+            console.log()
+            addSheetNameOptions(excelSheet.files[0])
+       })
+    }
 }
 
+/**
+ * 
+ *  */ 
+function addSheetNameOptions(files){
+
+    var selectMenu = document.getElementById('individualSheets');
+    console.log(files);  
+    var options = document.createElement("option");
+    options.value = "Sheet 1"
+    options.textContent = "Sheet1"
+
+    selectMenu.appendChild(options);
+}
 
 /**
  * Description:- Fetching data from excel sheet
@@ -56,7 +77,7 @@ async function readExcelSheet(mindmapModel){
             var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
             var json_object = JSON.stringify(XL_row_object);
             //console.log(JSON.parse(json_object));
-            console.log(XL_row_object);
+            console.log(sheetName);
             //console.log(XL_row_object.length);
 
             drawMapWithRows(XL_row_object,mindmapModel,excelSheet.name);
@@ -206,5 +227,6 @@ mindmaps.ImportExcelSheetPresenter = function(mindMapModel){
         console.log('go function called');
         var dialog = new mindmaps.ImportExcelSheet(mindMapModel);
         dialog.showDialog();
+        dialog.excelChangeListener();
     }
 }
