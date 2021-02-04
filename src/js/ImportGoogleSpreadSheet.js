@@ -78,14 +78,240 @@ function fetchGoogleSheetURL(mindMapModel){
 function fetchSheetJson(url,mindMapModel){
     $.ajax({url:url+"?alt=json",crossDomain:true,success:function(result){
         console.log(result);
-        var finalData = convertToRows(result.feed.entry)
-        drawMapForRows(finalData,mindMapModel)
+
+
+        generateMindMapwithLevels(result.feed.entry,mindMapModel)
+     
+
+        //var finalData = convertToRows(result.feed.entry)
+        //drawMapForRows(finalData,mindMapModel)
         //convertToMindMapModel(result.feed.entry,mindMapModel)
     },error:function(error){
         console.log(error)
     }})    
 }
 
+
+function convertToRowsWithLevels(cells){
+    /**
+   * 
+   * Step 1 ) get all the data in a single object with the keys as cellLocaltion and values as cell data  
+   * 
+   * */  
+  var columnData = {}
+  cells.forEach(element => {
+          columnData[element.title.$t] = []
+          columnData[element.title.$t].push(element.content.$t)
+  })
+
+
+  /**
+   *   Step 2) get all cell locations into an array
+   * 
+   *  */
+  var 
+  cellLocations = []
+  cells.forEach(element =>{
+          cellLocations.push(element.title.$t)
+  })
+
+
+  /**
+   *    Step 3) get all table Headers
+   *  */ 
+  var rowNumber = /\d+/.exec(cells[0].title.$t)
+  var tableHeaders = []
+  cells.forEach(element =>{
+      var extractedNumber = /\d+/.exec(element.title.$t)
+      if(rowNumber[0] == extractedNumber[0]){
+          tableHeaders.push(element.content.$t)
+      }
+  })
+ 
+  //console.log({columnData,cellLocations,tableHeaders})
+
+
+  /**
+     * Step 4) Seperate the Columns and rows in different arrays
+     * */
+    var columns = []
+    cellLocations.forEach( element =>{
+       columns.push(/[a-zA-Z]+/.exec(element)[0]);
+    })
+
+
+    /**
+     * Step 5) Remove All recouring elements from both the arrays
+     *  */ 
+    columns = getUnique(columns);
+
+
+    /**
+     *  Step 6) get an object  with keys as clumn name and value as an array with cell locations
+     *  */ 
+     var columnNameCellLocation = {} 
+     columns.forEach(element=>{
+        columnNameCellLocation[element] = []
+     })
+
+
+     columns.forEach(columnElement =>{
+        cellLocations.forEach(cellElement => {
+            if(columnElement === /[a-zA-Z]+/.exec(cellElement)[0])
+            {
+                columnNameCellLocation[columnElement].push(cellElement);
+            }
+        })  
+     })
+
+
+     
+     var stucturedData = {
+        cellLocation:"root",
+        columnName:"root",
+        value:"root",
+        child:[]
+     }
+
+
+     console.log({columnNameCellLocation})
+
+     for(var i=0;i<columns.length-1;i++)
+     {
+
+        columnA = columnNameCellLocation[columns[i]]
+        columnB = columnNameCellLocation[columns[i+1]]
+
+        var j = 0
+        var k = 0
+
+        var firstColumnObject = null
+        var secondColumnObject = null
+
+        while(j<columnA.length){
+        
+            while(k < columnB.length){
+
+                if(j < columnA.length)
+                {
+                
+                    if( mindmaps.Util.extractNumber(columnA[j]) != mindmaps.Util.extractNumber(columnB[k])){
+                        
+                            console.log()
+                            firstColumnObject=retriveChildObject(stucturedData,columnA[j]) 
+                            
+                            childObject = getRowObjectWithColums();
+                            childObject.cellLocation = columnB[k]
+                            childObject.value = columnData[columnB[k]];
+                            childObject.columnName = tableHeaders[i+1];
+                            firstColumnObject.child.push(childObject);
+
+                            if(j == columnA.length - 1 && k==columnB.length - 1){
+                                j++;
+                                k++;
+                            }else if(typeof columnA[j+1] !== 'undefined' && typeof columnB[k+1] !== 'undefined' ){   
+                                if(mindmaps.Util.extractNumber(columnA[j+1]) == mindmaps.Util.extractNumber(columnB[k+1])){
+                                    j++;
+                                    k++;
+                                } else {
+                                    k++;
+                                }
+                            }else {
+                                k++;
+                            } 
+
+                    }
+                    else if(mindmaps.Util.extractNumber(columnA[j]) == mindmaps.Util.extractNumber(columnB[k])){
+                        
+                        if(stucturedData.length == 0 || retriveChildObject(stucturedData,columnA[j]) == undefined)
+                        {
+                            var firstColumnObject = getRowObjectWithColums();
+                            firstColumnObject.cellLocation = columnA[j]
+                            firstColumnObject.columnName = tableHeaders[i]
+                            firstColumnObject.value = columnData[columnA[j]]
+    
+    
+                            var secondColumnObject = getRowObjectWithColums();
+                            secondColumnObject.cellLocation = columnB[k];
+                            secondColumnObject.columnName = tableHeaders[i+1]
+                            secondColumnObject.value = columnData[columnB[k]];
+    
+    
+                            firstColumnObject.child.push(secondColumnObject);
+                            stucturedData.child.push(firstColumnObject)
+
+
+                        } else {
+
+                            firstColumnObject=retriveChildObject(stucturedData,columnA[j]) 
+
+                            var secondColumnObject = getRowObjectWithColums();
+                            secondColumnObject.cellLocation = columnB[k];
+                            secondColumnObject.columnName = tableHeaders[i+1]
+                            secondColumnObject.value = columnData[columnB[k]];
+     
+    
+                            firstColumnObject.child.push(secondColumnObject);
+                            //stucturedData.push(firstColumnObject)
+                        }
+                       
+                        if(j == columnA.length - 1 && k==columnB.length - 1){
+                            j++;
+                            k++;
+                        }else if(typeof columnA[j+1] !== 'undefined' && typeof columnB[k+1] !== 'undefined' ){   
+                            if(mindmaps.Util.extractNumber(columnA[j+1]) == mindmaps.Util.extractNumber(columnB[k+1])){
+                                j++;
+                                k++;
+                            } else {
+                                k++;
+                            }
+                        }else {
+                            k++;
+                        } 
+
+                    }
+                }
+            } 
+            //j++;           
+            console.log({stucturedData})
+        }
+     }
+
+    
+
+    
+    //console.log(createRowObject(tableHeaders))
+
+    /**
+     * Step 5) using for the arrays we can get data for an object
+     * 
+     * */ 
+
+
+    // var finalData = []
+    // rows.forEach(rowNumber => {
+    //        var rowObject = createRowObject(tableHeaders)
+    //        for(var i =0 ;i<Columns.length;i++)
+    //        {
+    //            var celLocation = columns[i] + rowNumber;
+    //            var data = columnData[celLocation][0];
+
+    //            if(!isHeader(tableHeaders,data))
+    //            {
+    //                rowObject[tableHeaders[i]] = data
+    //            }
+    //        }
+
+    //        finalData.push(rowObject);
+    // })
+    
+
+    // return finalData
+  
+    
+    return stucturedData
+
+}
 
 /**
  * 
@@ -107,8 +333,7 @@ function convertToRows(cells){
 
 
     /**
-     * Step 2) get an array containing all cell Locations
-     *  */ 
+     * Step 2) get an array containing all c */ 
     var cellLocations = []
     cells.forEach(element =>{
             cellLocations.push(element.title.$t)
@@ -151,7 +376,7 @@ function convertToRows(cells){
      console.log(Columns)
      console.log(rows)
      console.log(tableHeaders);
-     console.log(createRowObject(tableHeaders))
+     //console.log(createRowObject(tableHeaders))
 
      /**
       * Step 5) using for the arrays we can get data for an object
@@ -245,6 +470,49 @@ function getUnique(array){
 
 /**
  * 
+ * Returning an object for 
+ * 
+ *  */ 
+function getRowObjectWithColums(){
+    return {
+        cellLocation:null,
+        columnName:null,
+        value:null,
+        child:[]
+    }
+}
+
+
+function retriveChildObject(root,cellLocation)
+{   
+    if(root.cellLocation === cellLocation){
+        return root
+    }
+    for(const child of root.child){
+        var x = retriveChildObject(child,cellLocation)
+        if(x){
+                return x;
+        }
+    }
+}
+
+
+// function findByRecurssion(childObject,cellLocation){
+//     if(childObject.cellLocation === cellLocation)
+//     {
+//         return childObject
+//     }
+
+//     for(const child in childObject.child)
+//     {
+//         return findByRecurssion(child,cellLocation)
+//     }
+// }
+
+//function retriveChildObject()
+
+/**
+ * 
  * 
  * Used for makng a model of a 
  * 
@@ -274,6 +542,54 @@ function getUnique(array){
 //     console.log(mpDocument);
 //     mindMapModel.setDocument(mpDocument);
 // }
+
+
+
+function generateMindMapwithLevels(entry,mindMapModel){
+    
+    var mpDocument = new mindmaps.Document();
+    var shapePreference = document.getElementById("spreadSheetShapeOption").value
+    mpDocument.title = "Sample"
+
+    mpDocument.mindmap.root.text.caption = "Central Idea";
+
+    var fileData = convertToRowsWithLevels(entry)
+
+    var json = drawMapForRowsWithLevels(fileData.child,mpDocument.mindmap.root,mindMapModel)
+    //mindmMapModel.setDocument(json)
+
+
+}
+
+function drawMapForRowsWithLevels(excelData,root,mindMapModel)
+{   
+
+    for(const child of excelData)
+    {
+        var parentNode = new mindmaps.Node();
+        parentNode.parent = mpDocument.mindmap.root
+        parentNode.text.caption = excelData[i][keyNames[j]]
+        parentNode.text.font.weight = "bold"
+        parentNode.branchColor = mindmaps.Util.randomColor();
+    
+        parentNode.offset.x = coordinates.xValues[i+1]
+        parentNode.offset.y = coordinates.yValues[i+1]
+        lineCoordinate =  mindmaps.Util.generateCircleCoordinates(200,keyNames.length - 1,coordinates.xValues[i+1],coordinates.yValues[i+1])
+        if(shapePreference === "Circle"){ 
+            parentNode.shape = mindmaps.Shape.SHAPE_CIRCLE
+        } else if (shapePreference === "Square"){
+            parentNode.shape = mindmaps.Shape.SHAPE_SQUARE
+        } else {
+            parentNode.shape = mindmaps.Shape.SHAPE_DEFAULT
+        }
+        root.children.add(parentNode);
+
+        if(child.child.length != 0)
+        {
+            drawMapForRowsWithLevels(child.child,root.children,mindMapModel)
+        }
+    }
+}
 
 
 /**
@@ -359,7 +675,7 @@ function drawMapForRows(excelData,mindMapModel) {
  *  @param {mindmaps.EventBus} eventbus
  *  
  * */  
-mindmaps.ImportGoogleSheetPresenter = function(mindMapModel,eventbus){
+mindmaps.ImportGoogleSheetPresenter = function(mindMapModel,eventbus){ 
     this.go = function(){
         var popUp = new mindmaps.ImportGoogleSheet(mindMapModel);
         popUp.showDialog();

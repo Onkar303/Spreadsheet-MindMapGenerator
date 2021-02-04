@@ -296,3 +296,11 @@ mindmaps.Util.generateParabolicCoordinates= function(difference,steps,centerX, c
       xValues,yValues
   }
 }
+
+
+mindmaps.Util.extractNumber = function(data){
+
+   var extractedNumber = /[\d]+/.exec(data);
+   return extractedNumber[0]
+
+}
