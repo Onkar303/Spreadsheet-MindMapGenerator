@@ -205,21 +205,6 @@ function convertToRowsWithLevels(cells){
                             childObject.value = columnData[columnB[k]];
                             childObject.columnName = tableHeaders[i+1];
                             firstColumnObject.child.push(childObject);
-
-                            if(j == columnA.length - 1 && k==columnB.length - 1){
-                                j++;
-                                k++;
-                            }else if(typeof columnA[j+1] !== 'undefined' && typeof columnB[k+1] !== 'undefined' ){   
-                                if(mindmaps.Util.extractNumber(columnA[j+1]) == mindmaps.Util.extractNumber(columnB[k+1])){
-                                    j++;
-                                    k++;
-                                } else {
-                                    k++;
-                                }
-                            }else {
-                                k++;
-                            } 
-
                     }
                     else if(mindmaps.Util.extractNumber(columnA[j]) == mindmaps.Util.extractNumber(columnB[k])){
                         
@@ -254,22 +239,22 @@ function convertToRowsWithLevels(cells){
                             firstColumnObject.child.push(secondColumnObject);
                             //stucturedData.push(firstColumnObject)
                         }
-                       
-                        if(j == columnA.length - 1 && k==columnB.length - 1){
+                    }
+
+
+                    if(j == columnA.length - 1 && k==columnB.length - 1){
+                        j++;
+                        k++;
+                    }else if(typeof columnA[j+1] !== 'undefined' && typeof columnB[k+1] !== 'undefined' ){   
+                        if(mindmaps.Util.extractNumber(columnA[j+1]) == mindmaps.Util.extractNumber(columnB[k+1])){
                             j++;
                             k++;
-                        }else if(typeof columnA[j+1] !== 'undefined' && typeof columnB[k+1] !== 'undefined' ){   
-                            if(mindmaps.Util.extractNumber(columnA[j+1]) == mindmaps.Util.extractNumber(columnB[k+1])){
-                                j++;
-                                k++;
-                            } else {
-                                k++;
-                            }
-                        }else {
+                        } else {
                             k++;
-                        } 
-
-                    }
+                        }
+                    }else {
+                        k++;
+                    } 
                 }
             } 
             //j++;           
@@ -551,42 +536,43 @@ function generateMindMapwithLevels(entry,mindMapModel){
     var shapePreference = document.getElementById("spreadSheetShapeOption").value
     mpDocument.title = "Sample"
 
+    
+    
+
+
     mpDocument.mindmap.root.text.caption = "Central Idea";
 
     var fileData = convertToRowsWithLevels(entry)
 
-    var json = drawMapForRowsWithLevels(fileData.child,mpDocument.mindmap.root,mindMapModel)
-    //mindmMapModel.setDocument(json)
+    //passing the child a
+    drawMapForRowsWithLevels(fileData.child,mpDocument.mindmap.root,mindMapModel)
+
+    mindMapModel.setDocument(mpDocument)
 
 
 }
 
-function drawMapForRowsWithLevels(excelData,root,mindMapModel)
-{   
 
+/**
+ * 
+ * @param {Array of child} excelData 
+ * @param {Node} parentNode 
+ * @param {MindMapModel} mindMapModel 
+ */
+function drawMapForRowsWithLevels(excelData,parentNode)
+{  
     for(const child of excelData)
     {
-        var parentNode = new mindmaps.Node();
-        parentNode.parent = mpDocument.mindmap.root
-        parentNode.text.caption = excelData[i][keyNames[j]]
-        parentNode.text.font.weight = "bold"
-        parentNode.branchColor = mindmaps.Util.randomColor();
-    
-        parentNode.offset.x = coordinates.xValues[i+1]
-        parentNode.offset.y = coordinates.yValues[i+1]
-        lineCoordinate =  mindmaps.Util.generateCircleCoordinates(200,keyNames.length - 1,coordinates.xValues[i+1],coordinates.yValues[i+1])
-        if(shapePreference === "Circle"){ 
-            parentNode.shape = mindmaps.Shape.SHAPE_CIRCLE
-        } else if (shapePreference === "Square"){
-            parentNode.shape = mindmaps.Shape.SHAPE_SQUARE
-        } else {
-            parentNode.shape = mindmaps.Shape.SHAPE_DEFAULT
-        }
-        root.children.add(parentNode);
-
+        var newNode = new mindmaps.Node();
+        newNode.parent = parentNode
+        newNode.text.caption = child.value[0];
+        newNode.text.font.weight = "bold"
+        newNode.branchColor = mindmaps.Util.randomColor();
+        newNode.shape = mindmaps.Shape.SHAPE_DEFAULT
+        parentNode.children.add(newNode)
         if(child.child.length != 0)
-        {
-            drawMapForRowsWithLevels(child.child,root.children,mindMapModel)
+        {  
+                drawMapForRowsWithLevels(child.child,newNode)   
         }
     }
 }
