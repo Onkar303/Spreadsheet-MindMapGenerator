@@ -40,12 +40,12 @@ mindmaps.ImportGoogleSheet = function(mindMapModel){
     //     alert(value)
     // })
 }
+  
 
-
-/** fetching json object from google sheet
- * 
- * 
- * */  
+ /**
+  * fetching json object from google sheet
+  * @param {*} mindMapModel 
+  */
 function fetchGoogleSheetURL(mindMapModel){
     var input = document.getElementById('spreadSheetURL').value;
 
@@ -92,6 +92,10 @@ function fetchSheetJson(url,mindMapModel){
 }
 
 
+/**
+ * 
+ * @param {*} cells 
+ */
 function convertToRowsWithLevels(cells){
     /**
    * 
@@ -147,7 +151,7 @@ function convertToRowsWithLevels(cells){
 
 
     /**
-     *  Step 6) get an object  with keys as clumn name and value as an array with cell locations
+     *  Step 6) get an object  with keys as column name and value as an array with cell locations
      *  */ 
      var columnNameCellLocation = {} 
      columns.forEach(element=>{
@@ -261,38 +265,6 @@ function convertToRowsWithLevels(cells){
             console.log({stucturedData})
         }
      }
-
-    
-
-    
-    //console.log(createRowObject(tableHeaders))
-
-    /**
-     * Step 5) using for the arrays we can get data for an object
-     * 
-     * */ 
-
-
-    // var finalData = []
-    // rows.forEach(rowNumber => {
-    //        var rowObject = createRowObject(tableHeaders)
-    //        for(var i =0 ;i<Columns.length;i++)
-    //        {
-    //            var celLocation = columns[i] + rowNumber;
-    //            var data = columnData[celLocation][0];
-
-    //            if(!isHeader(tableHeaders,data))
-    //            {
-    //                rowObject[tableHeaders[i]] = data
-    //            }
-    //        }
-
-    //        finalData.push(rowObject);
-    // })
-    
-
-    // return finalData
-  
     
     return stucturedData
 
@@ -529,7 +501,11 @@ function retriveChildObject(root,cellLocation)
 // }
 
 
-
+/**
+ * 
+ * @param {*} entry 
+ * @param {*} mindMapModel 
+ */
 function generateMindMapwithLevels(entry,mindMapModel){
     
     var mpDocument = new mindmaps.Document();
@@ -537,15 +513,14 @@ function generateMindMapwithLevels(entry,mindMapModel){
     mpDocument.title = "Sample"
 
     
-    
-
-
     mpDocument.mindmap.root.text.caption = "Central Idea";
 
     var fileData = convertToRowsWithLevels(entry)
 
     //passing the child a
-    drawMapForRowsWithLevels(fileData.child,mpDocument.mindmap.root,mindMapModel)
+    
+    var coordinates = mindmaps.Util.generateCircleCoordinates(100,fileData.child.length+1,mpDocument.mindmap.root.offset.x,mpDocument.mindmap.root.offset.y)
+    drawMapForRowsWithLevels(fileData.child,mpDocument.mindmap.root,coordinates)
 
     mindMapModel.setDocument(mpDocument)
 
@@ -559,22 +534,43 @@ function generateMindMapwithLevels(entry,mindMapModel){
  * @param {Node} parentNode 
  * @param {MindMapModel} mindMapModel 
  */
-function drawMapForRowsWithLevels(excelData,parentNode)
+function drawMapForRowsWithLevels(excelData,parentNode,coordinates)
 {  
-    for(const child of excelData)
+
+    for(var i = 0 ; i< excelData.length ;i++)
     {
         var newNode = new mindmaps.Node();
         newNode.parent = parentNode
-        newNode.text.caption = child.value[0];
+        newNode.text.caption = excelData[i].columnName+ ": " + excelData[i].value[0];
         newNode.text.font.weight = "bold"
         newNode.branchColor = mindmaps.Util.randomColor();
-        newNode.shape = mindmaps.Shape.SHAPE_DEFAULT
+        newNode.shape = mindmaps.Shape.SHAPE_DEFAULT;
+        newNode.offset.x = coordinates.xValues[i+1];
+        newNode.offset.y = coordinates.yValues[i+1];
         parentNode.children.add(newNode)
-        if(child.child.length != 0)
-        {  
-                drawMapForRowsWithLevels(child.child,newNode)   
+        if(excelData[i].child.length != 0)
+        {       
+                var childcoordinates = mindmaps.Util.generateCircleCoordinates(150,excelData[i].child.length+1, newNode.offset.x, newNode.offset.y)
+                drawMapForRowsWithLevels(excelData[i].child,newNode,childcoordinates)   
         }
     }
+
+    // for(const child of excelData)
+    // {
+    //     var newNode = new mindmaps.Node();
+    //     newNode.parent = parentNode
+    //     newNode.text.caption = child.value[0];
+    //     newNode.text.font.weight = "bold"
+    //     newNode.branchColor = mindmaps.Util.randomColor();
+    //     newNode.shape = mindmaps.Shape.SHAPE_DEFAULT;
+    //     newNode.offset.x = coordinates.xValues[];
+    //     newNode.offset.y = coordinates.yValues[];
+    //     parentNode.children.add(newNode)
+    //     if(child.child.length != 0)
+    //     {  
+    //             drawMapForRowsWithLevels(child.child,newNode)   
+    //     }
+    // }
 }
 
 

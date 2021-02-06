@@ -286,7 +286,7 @@ mindmaps.Util.generateParabolicCoordinates= function(difference,steps,centerX, c
           // xValues[i] = (yValues[i-1] + difference) * (yValues[i-1]+difference) / (4 * focus)
           // xValues[i] = (xValues[i-1] + difference) * (xValues[i-1]+difference) / (4 * focus)
 
-          yValues[i] = xValues[i-1] + difference
+          yValues[i] = yValues[i-1] + 2*difference
           xValues[i] = xValues[i-1];
       }        
   }
