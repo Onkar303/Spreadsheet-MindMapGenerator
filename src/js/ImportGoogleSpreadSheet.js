@@ -519,8 +519,12 @@ function generateMindMapwithLevels(entry,mindMapModel){
 
     //passing the child a
     
-    var coordinates = mindmaps.Util.generateCircleCoordinates(100,fileData.child.length+1,mpDocument.mindmap.root.offset.x,mpDocument.mindmap.root.offset.y)
-    drawMapForRowsWithLevels(fileData.child,mpDocument.mindmap.root,coordinates)
+    //generating coordinates of a circle
+    var coordinates = mindmaps.Util.generateCircleCoordinates(200,fileData.child.length+1,mpDocument.mindmap.root.offset.x,mpDocument.mindmap.root.offset.y)
+    
+    // removing the first object which contains all the headers
+    var excelData = fileData.child.splice(1,1);
+    drawMapForRowsWithLevels(excelData,shapePreference,mpDocument.mindmap.root,coordinates)
 
     mindMapModel.setDocument(mpDocument)
 
@@ -534,7 +538,7 @@ function generateMindMapwithLevels(entry,mindMapModel){
  * @param {Node} parentNode 
  * @param {MindMapModel} mindMapModel 
  */
-function drawMapForRowsWithLevels(excelData,parentNode,coordinates)
+function drawMapForRowsWithLevels(excelData,shapePreference,parentNode,coordinates)
 {  
 
     for(var i = 0 ; i< excelData.length ;i++)
@@ -544,14 +548,20 @@ function drawMapForRowsWithLevels(excelData,parentNode,coordinates)
         newNode.text.caption = excelData[i].columnName+ ": " + excelData[i].value[0];
         newNode.text.font.weight = "bold"
         newNode.branchColor = mindmaps.Util.randomColor();
-        newNode.shape = mindmaps.Shape.SHAPE_DEFAULT;
+        if(shapePreference === "Circle"){ 
+            newNode.shape = mindmaps.Shape.SHAPE_CIRCLE
+        } else if (shapePreference === "Square"){
+            newNode.shape = mindmaps.Shape.SHAPE_SQUARE
+        } else {
+            newNode.shape = mindmaps.Shape.SHAPE_DEFAULT
+        }
         newNode.offset.x = coordinates.xValues[i+1];
         newNode.offset.y = coordinates.yValues[i+1];
         parentNode.children.add(newNode)
         if(excelData[i].child.length != 0)
         {       
-                var childcoordinates = mindmaps.Util.generateCircleCoordinates(150,excelData[i].child.length+1, newNode.offset.x, newNode.offset.y)
-                drawMapForRowsWithLevels(excelData[i].child,newNode,childcoordinates)   
+                var childcoordinates = mindmaps.Util.generateCircleCoordinates(150,excelData[i].child.length+3, newNode.offset.x, newNode.offset.y)
+                drawMapForRowsWithLevels(excelData[i].child,shapePreference,newNode,childcoordinates)   
         }
     }
 
