@@ -523,8 +523,9 @@ function generateMindMapwithLevels(entry,mindMapModel){
     var coordinates = mindmaps.Util.generateCircleCoordinates(200,fileData.child.length+1,mpDocument.mindmap.root.offset.x,mpDocument.mindmap.root.offset.y)
     
     // removing the first object which contains all the headers
-    var excelData = fileData.child.splice(1,1);
-    drawMapForRowsWithLevels(excelData,shapePreference,mpDocument.mindmap.root,coordinates)
+    fileData.child.splice(0,1);
+    
+    drawMapForRowsWithLevels(fileData.child,shapePreference,mpDocument.mindmap.root,coordinates)
 
     mindMapModel.setDocument(mpDocument)
 
