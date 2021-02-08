@@ -18,7 +18,7 @@ mindmaps.ImportGoogleSheet = function(mindMapModel){
         height : "auto",
         buttons:{
             'Submit':function(){
-                fetchGoogleSheetURL(mindMapModel);
+                fetchGoogleSheetURL(mindMapModel)
                 $(this).dialog("destroy");
             },
             'Cancel':function(){
@@ -34,11 +34,6 @@ mindmaps.ImportGoogleSheet = function(mindMapModel){
     this.closeDialog = function(){
         this.$popUp.dialog("destroy");
     }
-
-    // this.onSubmit = $("#submit-google-url").button().click(function(){
-    //     var value = $("spreadSheetURL").val()
-    //     alert(value)
-    // })
 }
   
 
@@ -48,7 +43,6 @@ mindmaps.ImportGoogleSheet = function(mindMapModel){
   */
 function fetchGoogleSheetURL(mindMapModel){
     var input = document.getElementById('spreadSheetURL').value;
-
     if (input == undefined){
         alert('please add a google sheet url and make sure you plush it to the web ');
     } else {
@@ -58,6 +52,7 @@ function fetchGoogleSheetURL(mindMapModel){
         
         $.ajax({url:"https://spreadsheets.google.com/feeds/worksheets/"+ spreadSheetId[0] +"/public/basic?alt=json",crossDomain:true,success:function(result){
             fetchSheetJson(result.feed.entry[0].link[1].href,mindMapModel)
+            //output = result.feed.entry[0].link[1].href
         }, error:function(error){
             alert('Please check if you have published the excel sheet on the web ');
             console.log("error fetching request " + error);
@@ -75,12 +70,11 @@ function fetchGoogleSheetURL(mindMapModel){
  * 
  * 
 */
-function fetchSheetJson(url,mindMapModel){
-    $.ajax({url:url+"?alt=json",crossDomain:true,success:function(result){
-        console.log(result);
-
-
-        generateMindMapwithLevels(result.feed.entry,mindMapModel)
+async function fetchSheetJson(url,mindMapModel){
+    var entry = null
+    await $.ajax({url:url+"?alt=json",crossDomain:true,success:function(result){
+         //entry = result.feed.entry
+         generateMindMapwithLevels(result.feed.entry,mindMapModel)
      
 
         //var finalData = convertToRows(result.feed.entry)
@@ -88,7 +82,9 @@ function fetchSheetJson(url,mindMapModel){
         //convertToMindMapModel(result.feed.entry,mindMapModel)
     },error:function(error){
         console.log(error)
-    }})    
+    }}) 
+    
+    return entry
 }
 
 
@@ -508,16 +504,26 @@ function retriveChildObject(root,cellLocation)
  */
 function generateMindMapwithLevels(entry,mindMapModel){
     
+    //Creating a new Document
     var mpDocument = new mindmaps.Document();
-    var shapePreference = document.getElementById("spreadSheetShapeOption").value
-    mpDocument.title = "Sample"
-
     
-    mpDocument.mindmap.root.text.caption = "Central Idea";
+    //Retriving a shape preference 
+    var shapePreference = document.getElementById("spreadSheetShapeOption").value
 
+    //Retriving mindMap Name 
+    var mindMapName = document.getElementById("googleSheetMindMapName").value
+
+
+    //having a condition to check the value retrivied and then assigning the value
+    if(mindMapName !== ""){
+        mpDocument.title = mindMapName
+        mpDocument.mindmap.root.text.caption = mindMapName;
+    }else {
+        mpDocument.mindmap.root.text.caption = "Central Idea";
+    }
+    
+    //structuring the data with different levels
     var fileData = convertToRowsWithLevels(entry)
-
-    //passing the child a
     
     //generating coordinates of a circle
     var coordinates = mindmaps.Util.generateCircleCoordinates(200,fileData.child.length+1,mpDocument.mindmap.root.offset.x,mpDocument.mindmap.root.offset.y)
@@ -525,8 +531,10 @@ function generateMindMapwithLevels(entry,mindMapModel){
     // removing the first object which contains all the headers
     fileData.child.splice(0,1);
     
+    //using the structed data to make a minmap model 
     drawMapForRowsWithLevels(fileData.child,shapePreference,mpDocument.mindmap.root,coordinates)
 
+    //setting the document
     mindMapModel.setDocument(mpDocument)
 
 
@@ -534,6 +542,7 @@ function generateMindMapwithLevels(entry,mindMapModel){
 
 
 /**
+ * A recursive function to populate the mpDocument with respective data and children
  * 
  * @param {Array of child} excelData 
  * @param {Node} parentNode 
@@ -592,15 +601,37 @@ function drawMapForRowsWithLevels(excelData,shapePreference,parentNode,coordinat
  */
 function drawMapForRows(excelData,mindMapModel) {
     //var mpDocument = mindMapModel.getDocument();
+
+    //removing the 0th index object
+    excelData.splice(0,1)
+
+    //creating a new document
     var mpDocument = new mindmaps.Document();
+    
+    //retriving a shape preference from the UI
     var shapePreference = document.getElementById("spreadSheetShapeOption").value
-    mpDocument.title = "Sample"
+   
  
     console.log(excelData)
+    //setting the name of the root node
+
+    var mindMapName = document.getElementById("googleSheetMindMapName").value
+
+    if(mindMapName !== null){
+        mpDocument.title = mindMapName
+        mpDocument.mindmap.root.text.caption = mindMapName;
+    }else {
+        mpDocument.mindmap.root.text.caption = "Central Idea";
     mpDocument.mindmap.root.text.caption = "Central Idea"; 
+        mpDocument.mindmap.root.text.caption = "Central Idea";
+    }
+
+    
+    //retriving the circle coordinates
     var coordinates = mindmaps.Util.generateCircleCoordinates(300,excelData.length + 1,0,0);
     
 
+    //parsing the data
     for (var i = 0; i < excelData.length ; i++)
     {
         
