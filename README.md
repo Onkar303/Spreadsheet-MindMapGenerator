@@ -1,5 +1,5 @@
 # mindmaps Generator
-This project was taken out from [david drichard] https://github.com/drichard/mindmaps as a base for a research project in Monash university,melbourne.The main aim of the project was to generate a mindmap by parsing data from an excel sheet or google sheet and then giving a visual representation to it.
+This project was taken out from [David Drichard] https://github.com/drichard/mindmaps as a base for a research project in Monash University,Melbourne.The main aim of the project was to generate a mindmap by parsing data from an excel sheet or google sheet and then giving a visual representation to it.
 
 Certain changes have been made in the code base in order to implement the mindmap generation functionality.
 
@@ -11,7 +11,7 @@ Certain changes have been made in the code base in order to implement the mindma
 
 
 ## Additional fetures
-- ability to generate a mindmap by reading an excel sheet from both your local storage and Google Sheet
+- Ability to generate a mindmap by reading an excel sheet from both your local storage and Google Sheet
 
 
 ## PreRequisite to use a GoogleSheet
@@ -20,7 +20,7 @@ Certain changes have been made in the code base in order to implement the mindma
 
 
 ## Deploy localy
-* Install node js if you have it installed
+* Install node js if you have not installed
 * To deploy,please clone the existing project.
 * Using terminal or Cmd to navigate to the root directory of the project in your local system.
 * Before procedding run `npm install` to install required dependencies .
@@ -28,7 +28,7 @@ Certain changes have been made in the code base in order to implement the mindma
 
 
 ## Build
-* Install node js if you have it installed
+* Install node js if you have not installed
 * To build,please clone the existing project.
 * Using terminal or Cmd to navigate to the root directory of the project in your local system.
 * Before procedding run `npm install` to install required dependencies .
