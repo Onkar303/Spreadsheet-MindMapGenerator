@@ -1,4 +1,4 @@
-# mindmaps Generator
+# Mindmaps Generator
 This project was taken out from [David Drichard] https://github.com/drichard/mindmaps as a base for a research project in Monash University,Melbourne.The main aim of the project was to generate a mindmap by parsing data from an excel sheet or google sheet and then giving a visual representation to it.
 
 Certain changes have been made in the code base in order to implement the mindmap generation functionality.
